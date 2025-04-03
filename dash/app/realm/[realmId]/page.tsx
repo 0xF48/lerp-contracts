@@ -12,9 +12,9 @@ import { AnimatedLerpLogo } from "@/components/AnimatedLerpLogo";
 
 
 // This is a Server Component
-export default async function realmIdPage({ params }: { params: { realmId: string } }) {
+export default async function realmIdPage({ params }: any) {
 	// Read the README.md file
-	const { realmId } = params
+	const { realmId } = await params
 	const realmInfo = await getRealmInfo(realmId)
 
 

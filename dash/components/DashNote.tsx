@@ -3,14 +3,23 @@
 import { STYLE } from "@/enums";
 import cn from "classnames";
 import { DeleteIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 
 
 
 export function DashNote({ onClose }: { onClose?: () => void }) {
-	const [closed, setClosed] = useState(localStorage.getItem('noteClosed') === 'true');
+	// Initialize state without accessing localStorage directly
+	const [closed, setClosed] = useState(false);
+
+	// Check localStorage only after mounting on the client
+	useEffect(() => {
+		const isClosed = localStorage.getItem('noteClosed') === 'true';
+		if (isClosed) {
+			setClosed(true);
+		}
+	}, []); // Empty dependency array ensures this runs only once on mount
 
 	if (closed) {
 		return null;
