@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "sn1": {
+      "address": "0x67EA526eF4b2713d248b55bafe7352b66Fd637bf",
+      "startBlock": 6463075
+    }
+  }
+}
