@@ -11,9 +11,10 @@ const TEST_DATA = [
 	{
 		name: 'podrun',
 		id: 'podrun',
+		bannerUrl: 'https://lerp.io/assets/realms/podrun/podrun.png',
 		media: {
 			static: {
-				src: 'https://lerp.io/assets/realms/podrun/podrun.png'
+				src: 'https://lerp.io/assets/realms/podrun/reel-1.jpg'
 			}
 		},
 		currentVersion: 'v0.1',
@@ -27,27 +28,7 @@ const TEST_DATA = [
 				value: '100'
 			},
 		]
-	},
-	{
-		name: 'colonies',
-		id: 'col',
-		media: {
-			static: {
-				src: 'https://lerp.io/assets/realms/podrun/podrun.png'
-			}
-		},
-		currentVersion: 'v0.1',
-		stats: [
-			{
-				name: 'staked',
-				value: '400'
-			},
-			{
-				name: 'players',
-				value: '100'
-			},
-		]
-	},
+	}
 ]
 
 

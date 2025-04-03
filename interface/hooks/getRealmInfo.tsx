@@ -14,9 +14,10 @@ export async function getRealmInfo(realmId: string) {
 	const data = {
 		id: 'podrun',
 		name: 'Podrun',
+		bannerUrl: 'https://lerp.io/assets/realms/podrun/podrun.png',
 		media: {
 			static: {
-				src: 'https://lerp.io/assets/realms/podrun/podrun.png'
+				src: 'https://lerp.io/assets/realms/podrun/reel-1.jpg'
 			}
 		},
 		currentVersion: 'v0.1',

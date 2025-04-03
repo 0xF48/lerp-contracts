@@ -87,27 +87,6 @@ describe("LerpToken", function () {
 				.to.be.revertedWith("Insufficient funds sent");
 		});
 
-		// Added test without using loadFixture to isolate signer issue
-		it("Should fail if user sends insufficient funds (no fixture)", async function () {
-			// Deploy directly in the test
-			const [owner, addr1] = await ethers.getSigners();
-			const lerpTokenFactory = await ethers.getContractFactory("LerpToken");
-			const lerpToken = await lerpTokenFactory.deploy("Lerp Token", "LRP");
-			await lerpToken.waitForDeployment();
-
-			// Setup sale
-			const saleAmount = ethers.parseUnits("1000", 18);
-			const salePrice = ethers.parseUnits("0.01", "ether");
-			const duration = 3600;
-			await lerpToken.connect(owner).startSale(saleAmount, salePrice, duration);
-
-			// Attempt buy with insufficient funds
-			const buyAmount = ethers.parseUnits("100", 18);
-			const insufficientCost = BigInt(buyAmount) * BigInt(salePrice) / BigInt(ethers.parseUnits("1", 18)) - BigInt(1);
-			await expect(lerpToken.connect(addr1).buyTokens(buyAmount, { value: insufficientCost })) // Check if this still fails
-				.to.be.revertedWith("Insufficient funds sent");
-		});
-
 		it("Should fail if sale has ended", async function () {
 			const { lerpToken, owner, addr1 } = await loadFixture(deployLerpTokenFixture);
 			const saleAmount = ethers.parseUnits("1000", 18);
@@ -163,6 +142,18 @@ describe("LerpToken", function () {
 			expect(await lerpToken.balanceOf(lerpTokenAddress)).to.equal(
 				(await lerpToken.TOTAL_SUPPLY()) - saleAmount + (saleAmount - buyAmount) + stakeAmount // Contract balance increases by stake amount
 			);
+		});
+
+		// Moved this test case out of the previous 'it' block and into the 'describe' block
+		it("Should fail if user tries to buy tokens when no sale is active", async function () {
+			const { lerpToken, addr1 } = await loadFixture(deployLerpTokenFixture);
+			const buyAmount = ethers.parseUnits("100", 18);
+			// Sending some value, although it doesn't matter much as it should revert before checking value
+			const dummyCost = ethers.parseUnits("1", "ether");
+
+			// Attempt to buy without starting a sale
+			await expect(lerpToken.connect(addr1).buyTokens(buyAmount, { value: dummyCost }))
+				.to.be.revertedWith("Sale has ended"); // Because saleEndTime is 0
 		});
 
 		it("Should fail if user tries to stake 0 tokens", async function () {
