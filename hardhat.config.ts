@@ -21,27 +21,24 @@ const config: HardhatUserConfig = {
     hardhat: {
       chainId: 31337,
       gasPrice: 8000000000,
-      accounts: [{
-        privateKey: PRIVATE_KEY,
-        balance: '1000000000000000000000000'
-      }]
+      // Removed explicit accounts array to use Hardhat default accounts
     },
-    polygon: {
-      url: "https://polygon-rpc.com",
-      gasPrice: 8000000000,
-      chainId: 137,
-      accounts: [PRIVATE_KEY]
-    },
-    sepolia: {
-      url: "https://public.stackup.sh/api/v1/node/ethereum-sepolia",
-      gasPrice: 8000000000,
-      chainId: 11155111,
-      accounts: [PRIVATE_KEY]
-    }
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY || ""
+    // polygon: {
+    //   url: "https://polygon-rpc.com",
+    //   gasPrice: 8000000000,
+    //   chainId: 137,
+    //   accounts: [PRIVATE_KEY]
+    // },
+    // sepolia: {
+    //   url: "https://public.stackup.sh/api/v1/node/ethereum-sepolia",
+    //   gasPrice: 8000000000,
+    //   chainId: 11155111,
+    //   accounts: [PRIVATE_KEY]
+    // }
   }
+  // etherscan: {
+  //   apiKey: process.env.ETHERSCAN_API_KEY || ""
+  // }
 };
 
 export default config;
