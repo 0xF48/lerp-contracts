@@ -38,8 +38,8 @@ export async function DashRealmsList() {
 		<div className={classNames('w-full flex flex-col gap-8 p-8')}>
 			<div className="text-gray-400">realms:</div>
 			{realms.map((realm, index) => {
-				return <Link href={'/realm/' + realm.id} className="hover:ring-4  hover:ring-yellow-400 transition-all rounded-2xl">
-					<DashRealmCard key={index} config={realm} />
+				return <Link key={realm.id} href={'/realm/' + realm.id} className="hover:ring-4  hover:ring-yellow-400 transition-all rounded-2xl">
+					<DashRealmCard config={realm} />
 				</Link>
 			})}
 		</div>

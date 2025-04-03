@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 
 export function DashNote({ onClose }: { onClose?: () => void }) {
 	// Initialize state without accessing localStorage directly
-	const [closed, setClosed] = useState(false);
+	const [closed, setClosed] = useState(true);
 
 	// Check localStorage only after mounting on the client
 	useEffect(() => {

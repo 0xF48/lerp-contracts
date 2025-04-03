@@ -3,10 +3,20 @@ export const enum NAV {
 	DOCS = "/docs",
 }
 
+export const enum PANEL {
+	BUY = "buy",
+	CLAIM = "claim",
+	STAKE = "stake",
+	UNSTAKE = "unstake",
+}
+
 export const enum STYLE {
 	YELLOW_BUTTON_HOVER = 'hover:ring-4 hover:ring-yellow-300/30 hover:bg-yellow-300 transition-all',
 	BLACK_BUTTON_HOVER = 'hover:ring-4 hover:ring-gray-300 hover:bg-gray-800 transition-all',
 	YELLOW_BUTTON = 'cursor-pointer bg-yellow-400 text-black rounded-lg px-4 flex items-center h-12 ' + YELLOW_BUTTON_HOVER,
+
+	GREEN_BUTTON_HOVER = 'hover:ring-4 hover:ring-green-300/30 hover:bg-green-500 transition-all',
+	GREEN_BUTTON = 'cursor-pointer bg-green-500 text-white rounded-lg px-4 flex items-center h-12 ' + GREEN_BUTTON_HOVER,
 
 	BLUE_BUTTON_HOVER = 'hover:ring-4 hover:ring-blue-300/30 hover:bg-blue-500 transition-all',
 	BLUE_BUTTON = 'cursor-pointer bg-blue-600 text-white rounded-lg px-4 flex items-center h-12 ' + BLUE_BUTTON_HOVER,

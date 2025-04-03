@@ -1,5 +1,5 @@
 import { ArrowUp, ArrowUpIcon, ChevronLeftIcon } from "lucide-react";
-import { NAV, STYLE } from "@/enums";
+import { NAV, PANEL, STYLE } from "@/enums";
 
 import AccountBalanceButton from "@/components/AccountBalanceButton";
 import cn from "classnames";
@@ -7,6 +7,9 @@ import { getRealmInfo } from "@/hooks/getRealmInfo";
 import { DashRealmCard } from "@/components/DashRealmCard";
 import Link from "next/link";
 import { AnimatedLerpLogo } from "@/components/AnimatedLerpLogo";
+import { usePanel } from "@/hooks/usePanel";
+import { StakePanelButton } from "@/components/panels/StakePanel";
+import { ClaimPanelButton } from "@/components/panels/ClaimPanel";
 
 
 
@@ -16,6 +19,7 @@ export default async function realmIdPage({ params }: any) {
 	// Read the README.md file
 	const { realmId } = await params
 	const realmInfo = await getRealmInfo(realmId)
+
 
 
 	return (
@@ -48,7 +52,7 @@ export default async function realmIdPage({ params }: any) {
 							<div className="w-full flex  justify-between items-center px-2 flex-row-reverse pt-6">
 								<div className="flex flex-row gap-4 items-center">
 									<div className="text-yellow-400 text-xl font-l">0.0%</div>
-									<div className={STYLE.YELLOW_BUTTON}>stake</div>
+									<StakePanelButton />
 									<div className={STYLE.BLACK_BUTTON}><ArrowUpIcon className="stroke-white" /></div>
 								</div>
 
@@ -63,7 +67,8 @@ export default async function realmIdPage({ params }: any) {
 							</div>
 						})}
 						<div>
-							<button className={cn(STYLE.BLUE_BUTTON, 'p2 w-fit p-0 px-10 mt-10')}>Connect To Claim</button>
+							<ClaimPanelButton />
+
 						</div>
 					</div>
 				</div>

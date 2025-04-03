@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { DappProvider } from "@/components/DappProvider";
+import { PanelOverlay } from "@/components/PanelOverlay";
 // import { usePathname } from "next/navigation";
 
 
@@ -29,7 +31,11 @@ export default function RootLayout({
       <body
         className={`font-ocra antialiased `}
       >
-        {children}
+        <DappProvider>
+          {children}
+          <PanelOverlay />
+        </DappProvider>
+
       </body>
     </html>
   );

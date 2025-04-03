@@ -18,8 +18,8 @@ export function TokenTopHoldersStat() {
 		chartData = data.map((entry) => {
 			return entry.tokenAmount
 		})
-		holderEntries = data.map((entry) => {
-			return <div className="flex flex-row w-full justify-between">
+		holderEntries = data.map((entry, index) => {
+			return <div key={index} className="flex flex-row w-full justify-between">
 				<div>{entry.address}</div>
 				<div>{entry.tokenAmount}</div>
 			</div>

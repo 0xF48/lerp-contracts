@@ -8,9 +8,12 @@ import { DashNote } from "@/components/DashNote";
 import { DashRealmsList } from "@/components/DashRealmsList";
 import { DashTokenStatSections } from "@/components/DashTokenStatSections";
 
+import { BuyPanelButton } from "@/components/panels/BuyPanel";
+
 export default function Dash() {
   return <>
-    <a href='https://lerp.io' className={cn(STYLE.BLACK_BUTTON, 'top-6 left-6 w-fit fixed gap-2')}>
+
+    <a href='https://lerp.io' className={cn(STYLE.BLACK_BUTTON, 'top-6 left-6 w-fit fixed gap-2 z-30')}>
       <ChevronLeftIcon className={cn(STYLE.BUTTON_ICON, 'h-5 w-5')} />
       <img src='/lerp-name.svg' alt='Lerp Landering Page' className='h-4 mr-2' />
     </a>
@@ -42,15 +45,14 @@ export default function Dash() {
         </div>
       </div>
 
-      <div className="sticky left-0 -bottom-10 bg-black/90 text-white p-6 rounded-2xl pb-16 -mb-10 max-w-[40em] w-full  backdrop-blur-3xl justify-between flex flex-row items-center mt-10">
-        <div className="text-white/50 ml-4">left: <span className="text-white font-bold">20</span></div>
-        <button className={cn(STYLE.BLUE_BUTTON, 'p2 w-fit p-0 px-10 ')}>Connect To Buy</button>
-      </div>
+      <BuyPanelButton />
+
 
 
     </div>
     <div className="relative  text-black pt-20 min-h-[20em] flex flex-row justify-center">
       <div>footer</div>
     </div>
+
   </>
 }
