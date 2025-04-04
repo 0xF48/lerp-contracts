@@ -28,11 +28,11 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
-export type { Math } from "./@openzeppelin/contracts/utils/math/Math";
-export { Math__factory } from "./factories/@openzeppelin/contracts/utils/math/Math__factory";
+export type { SafeCast } from "./@openzeppelin/contracts/utils/math/SafeCast";
+export { SafeCast__factory } from "./factories/@openzeppelin/contracts/utils/math/SafeCast__factory";
 export type { Strings } from "./@openzeppelin/contracts/utils/Strings";
 export { Strings__factory } from "./factories/@openzeppelin/contracts/utils/Strings__factory";
-export type { LerpRealm } from "./contracts/core/LerpRealm";
-export { LerpRealm__factory } from "./factories/contracts/core/LerpRealm__factory";
-export type { LerpToken } from "./contracts/core/LerpToken";
-export { LerpToken__factory } from "./factories/contracts/core/LerpToken__factory";
+export type { LerpRealm } from "./contracts/LerpRealm";
+export { LerpRealm__factory } from "./factories/contracts/LerpRealm__factory";
+export type { LerpToken } from "./contracts/LerpToken";
+export { LerpToken__factory } from "./factories/contracts/LerpToken__factory";
