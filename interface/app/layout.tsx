@@ -1,4 +1,4 @@
-
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
 import { DappProvider } from "@/components/DappProvider";
@@ -29,7 +29,9 @@ export default function RootLayout({
       >
         <DappProvider>
           {children}
-          <PanelOverlay />
+          <Suspense fallback={null}> {/* Or a minimal loading indicator */}
+            <PanelOverlay />
+          </Suspense>
         </DappProvider>
 
       </body>

@@ -1,5 +1,3 @@
-import useSWR from "swr";
-
 export function useTokenDistributionStats() {
 
 	return {

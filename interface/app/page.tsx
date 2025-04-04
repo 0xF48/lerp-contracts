@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ChevronLeftIcon } from "lucide-react";
 import { NAV, STYLE } from "@/enums";
 import AccountBalanceButton from "@/components/AccountBalanceButton";
@@ -20,7 +21,9 @@ export default function Dash() {
 
     <div className={STYLE.PAGE_NAV}>
       <div></div>
-      <AccountBalanceButton />
+      <Suspense fallback={<div>Loading...</div>}>
+        <AccountBalanceButton />
+      </Suspense>
     </div>
     <div className={cn(STYLE.PAGE_CONTENT, 'items-center')}>
       <div className="w-full flex items-center justify-center py-10">
@@ -45,7 +48,9 @@ export default function Dash() {
         </div>
       </div>
 
-      <BuyPanelButton />
+      <Suspense fallback={<div>Loading...</div>}>
+        <BuyPanelButton />
+      </Suspense>
 
 
 
