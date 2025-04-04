@@ -1,6 +1,7 @@
 import Link from "next/link"
 
-
+import cn from "classnames"
+import { STYLE } from "@/enums"
 
 
 export function DashRealmCard({ config, children }: { config: any, children?: React.ReactNode }) {
@@ -24,11 +25,20 @@ export function DashRealmCard({ config, children }: { config: any, children?: Re
 		</div>
 
 		{children ? children : config.stats.map(({ name, value }: { name: string, value: string }) => {
-			return <div key={name} className="flex flex-row gap-2 justify-between w-full px-2">
-				<div className="w-auto text-gray-400">{name}</div>
-				<div className="w-auto text-white">{value}</div>
-			</div>
+			return <>
+				<div key={name} className="flex flex-row gap-2 justify-between w-full px-2">
+					<div className="w-auto text-gray-400">{name}</div>
+					<div className="w-auto text-white">{value}</div>
+				</div>
+
+			</>
+
 		})}
-	</div>
+
+
+
+
+
+	</div >
 
 }

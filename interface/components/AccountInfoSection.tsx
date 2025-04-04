@@ -4,6 +4,7 @@ import React from 'react';
 import { useAccount } from 'wagmi';
 import { useLerpToken } from '@/hooks/useLerpToken';
 import cn from 'classnames';
+import { STYLE } from '@/enums';
 
 // Helper function to truncate address
 const truncateAddress = (address: string | undefined) => {
@@ -11,7 +12,7 @@ const truncateAddress = (address: string | undefined) => {
 	return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
 };
 
-export const AccountInfoCard: React.FC = () => {
+export const AccountInfoSection: React.FC = () => {
 	const { address: accountAddress, isConnected } = useAccount();
 	const { userLftBalance } = useLerpToken();
 
@@ -19,10 +20,11 @@ export const AccountInfoCard: React.FC = () => {
 	const stakedAmount = "0.00";
 
 	return (
-		<div className="w-full flex flex-col items-start gap-2 font-mono mb-6">
+		<div className={cn("w-full flex flex-col gap-8 p-8", STYLE.BORDER_DASHED_BOT)}>
 			{/* Connected Account Label */}
-			<div className="text-sm text-gray-600 px-1">
-				Connected Account: {truncateAddress(accountAddress)}
+			<div className="text-gray-400 w-full justify-between flex flex-row">
+				Account:
+				<span className='font-bold text-black'>{truncateAddress(accountAddress)}</span>
 			</div>
 
 			{/* Blue Info Card */}
@@ -30,14 +32,14 @@ export const AccountInfoCard: React.FC = () => {
 				{/* Available Balance */}
 				<div className="flex justify-between items-baseline">
 					<span className="text-lg">Available</span>
-					<span className="text-lg font-bold">{isConnected ? userLftBalance : '0.00'} $LFT</span>
+					<div className="text-lg font-bold">{isConnected ? userLftBalance : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>
 
 				{/* Staked Balance */}
 				<div className="flex justify-between items-baseline">
 					{/* Highlight "Staked" text differently if needed, e.g., text-yellow-300 */}
 					<span className="text-lg text-yellow-300">Staked</span>
-					<span className="text-lg font-bold">{isConnected ? stakedAmount : '0.00'} $LFT</span>
+					<div className="text-lg font-bold">{isConnected ? stakedAmount : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>
 
 				{/* Realm Selection Text */}
