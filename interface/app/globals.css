@@ -138,3 +138,22 @@ body {
   font-size: 1rem;
   margin-left: 1.5rem;
 }
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+  /* Remove the border trick that's causing problems */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  /* Optional: maintain some padding with margin instead of border */
+  margin: 10px 10px;
+}

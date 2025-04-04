@@ -22,18 +22,28 @@ export function usePanel() {
 		router.push(`?${sp.toString()}`, { scroll: false });
 	};
 
-	let panelOverlayColor = 'bg-blue-700/90';
+	let panelOverlayColor = 'bg-black/90';
 	if (currentPanel == PANEL.BUY) {
-		panelOverlayColor = 'bg-blue-700/90';
+		panelOverlayColor = 'bg-blue-900/90';
 	} else if (currentPanel == PANEL.STAKE) {
-		panelOverlayColor = 'bg-yellow-700/90';
+		panelOverlayColor = 'bg-yellow-900/90';
 	} else if (currentPanel == PANEL.CLAIM) {
-		panelOverlayColor = 'bg-green-700/90';
+		panelOverlayColor = 'bg-green-900/90';
+	}
+
+	let panelBackgroundColor = 'bg-gray-800'
+	if (currentPanel === PANEL.BUY) {
+		panelBackgroundColor = 'bg-blue-500';
+	} else if (currentPanel === PANEL.STAKE) {
+		panelBackgroundColor = 'bg-yellow-500';
+	} else if (currentPanel === PANEL.CLAIM) {
+		panelBackgroundColor = 'bg-green-500';
 	}
 
 	return {
 		currentPanel,
 		panelOverlayColor,
+		panelBackgroundColor,
 		navToPanel,
 		hidePanel,
 	};

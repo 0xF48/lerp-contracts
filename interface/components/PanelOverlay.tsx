@@ -9,7 +9,7 @@ import { StakePanelContent } from './panels/StakePanel';
 import { ClaimPanelContent } from './panels/ClaimPanel';
 
 export function PanelOverlay() {
-	const { currentPanel, hidePanel, panelOverlayColor } = usePanel();
+	const { currentPanel, hidePanel, panelOverlayColor, panelBackgroundColor } = usePanel();
 	const ref = useRef<HTMLDivElement>(null);
 	let panelContent = null;
 	if (currentPanel) {
@@ -21,6 +21,8 @@ export function PanelOverlay() {
 			panelContent = <ClaimPanelContent />
 		}
 	}
+
+	const bgColor = panelBackgroundColor;
 
 	useEffect(() => {
 		if (!currentPanel) return;
@@ -46,16 +48,27 @@ export function PanelOverlay() {
 
 	return <>
 
-		<div
-			onClick={hidePanel}
-			ref={ref}
-			className={
-				cn(currentPanel ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none', `w-full h-full fixed left-0 top-0 transition-opacity duration-200 backdrop-blur-3xl z-40`, panelOverlayColor)}>
-		</div>
-
-		{panelContent ? <div className="z-50 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[30em] w-full h-[40em] max-h-full rounded-2xl overflow-y-scroll overflow-x-hidden">
-			{panelContent}
-		</div> : null}
+		<>
+			<div
+				onClick={hidePanel}
+				ref={ref}
+				className={cn(
+					currentPanel ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+					`w-full h-full fixed left-0 top-0 transition-opacity duration-200 backdrop-blur-3xl z-40`,
+					panelOverlayColor
+				)}
+			/>
+			{panelContent ? (
+				<div className="z-50 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[30em] w-full h-[40em] max-h-full rounded-2xl overflow-hidden">
+					{/* Inner container for scrolling */}
+					<div className={"h-full rounded-xl overflow-hidden overflow-x-hidden  pl-1 pr-3 py-3 " + bgColor}>
+						<div className={"h-full overflow-y-scroll overflow-x-hidden  rounded-xl " + bgColor}>
+							{panelContent}
+						</div>
+					</div>
+				</div>
+			) : null}
+		</>
 
 
 	</>
