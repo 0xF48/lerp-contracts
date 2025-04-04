@@ -39,7 +39,7 @@
     "@types/glob": "^8.1.0",
     "@types/minimatch": "^5.1.2",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20",
+    "@types/node": "^22.14.0",
     "@types/pbkdf2": "^3.1.2",
     "@types/qs": "^6.9.18",
     "@types/react": "^19",
