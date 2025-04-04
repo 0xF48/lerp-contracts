@@ -1,6 +1,11 @@
+import { getAPIAssetPath } from "@/hooks/getAPIAssetPath"
+
+
 export function DashRealmCard({ config, children }: { config: any, children?: React.ReactNode }) {
-	const realmImagePreview = config.media.static ? config.media.static.src : undefined
-	const realmBannerPreview = config.bannerUrl ? config.bannerUrl : undefined
+	const realmImagePreview = config.media.static ? getAPIAssetPath(config.media.static.src) : undefined
+	const realmBannerPreview = config.bannerUrl ? getAPIAssetPath(config.bannerUrl) : undefined
+
+
 	return <div className="w-full h-32em bg-black rounded-2xl flex flex-col gap-6 p-8 text-white ">
 		<div className="flex flex-row gap-2 justify-between w-full px-4">
 			<div className="uppercase text-yellow-400 font-bold">
@@ -18,7 +23,7 @@ export function DashRealmCard({ config, children }: { config: any, children?: Re
 			</div>
 		</div>
 
-		{children ? children : config.stats.map(({ name, value }: { name: string, value: string }) => {
+		{/* {children ? children : config.stats.map(({ name, value }: { name: string, value: string }) => {
 			return <>
 				<div key={name} className="flex flex-row gap-2 justify-between w-full px-2">
 					<div className="w-auto text-gray-400">{name}</div>
@@ -27,7 +32,7 @@ export function DashRealmCard({ config, children }: { config: any, children?: Re
 
 			</>
 
-		})}
+		})} */}
 
 	</div >
 
