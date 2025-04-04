@@ -22,7 +22,7 @@ export const TapScaleWrapper: React.FC<TapScaleWrapperProps> = ({
 		console.log('Tapped');
 		setIsTapped(true);
 		controls.start({
-			scale: 0.95,
+			scale: 0.98,
 			// Directly animate the CSS variable Tailwind uses for ring offset
 			// @ts-ignore - Framer motion can animate CSS variables
 			// '--tw-ring-offset-width': '4px',
@@ -55,8 +55,8 @@ export const TapScaleWrapper: React.FC<TapScaleWrapperProps> = ({
 		<div className={className}>
 			<motion.div
 				className={cn(
-					isTapped ? 'transition-none' : 'transition-transform duration-300',
-					'hover:scale-105  will-change-transform',
+					isTapped ? 'transition-none' : 'hover:scale-102 transition-transform duration-300',
+					'will-change-transform',
 					"backdrop-blur-xl rounded-2xl overflow-hidden",
 					'rounded-2xl',
 					'ring-2 ring-blue-500/50', // Ring color and base width

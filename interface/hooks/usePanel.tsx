@@ -32,16 +32,16 @@ export function usePanel() {
 	}
 
 	let panelBackgroundColor = 'bg-gray-800'
-	let panelTitleColor = 'text-gray-800';
+	let panelTitleColor = 'bg-gray-800 text-white';
 	if (currentPanel === PANEL.BUY) {
-		panelBackgroundColor = 'bg-blue-500';
-		panelTitleColor = 'text-blue-500';
+		panelBackgroundColor = 'bg-white';
+		panelTitleColor = 'bg-blue-600 text-white';
 	} else if (currentPanel === PANEL.STAKE) {
-		panelBackgroundColor = 'bg-yellow-500';
-		panelTitleColor = 'text-yellow-500';
+		panelBackgroundColor = 'bg-white';
+		panelTitleColor = 'bg-yellow-300 text-black';
 	} else if (currentPanel === PANEL.CLAIM) {
-		panelBackgroundColor = 'bg-green-500';
-		panelTitleColor = 'text-green-500';
+		panelBackgroundColor = 'bg-white';
+		panelTitleColor = 'bg-green-500 text-white';
 	}
 
 	return {

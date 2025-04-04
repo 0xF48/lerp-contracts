@@ -7,7 +7,7 @@ import { PANEL, STYLE } from "@/enums";
 
 export function ClaimPanelContent() {
 
-	return <div className={'w-full h-full bg-green-500 text-white p-10'}>
+	return <div className={'w-full h-full p-10'}>
 		<div>claim options</div>
 	</div>
 }

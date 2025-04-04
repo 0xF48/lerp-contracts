@@ -27,7 +27,7 @@ const showButtonStyle = `
 
 export function BuyPanelContent() {
 
-	return <div className={'w-full h-full bg-blue-500 text-white p-10'}>
+	return <div className={'w-full h-full  text-white p-10'}>
 		<div>BUY options</div>
 	</div>
 }

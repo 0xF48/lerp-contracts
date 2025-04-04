@@ -68,7 +68,7 @@ export function PanelOverlay() {
 				onClick={hidePanel}
 				ref={ref}
 				className={cn(
-					currentPanel ? "opacity-100 pointer-events-auto " + panelOverlayColor : "opacity-0 pointer-events-none bg-white/0",
+					currentPanel ? "opacity-100 pointer-events-auto bg-gray-200/80" : "opacity-0 pointer-events-none bg-white/0",
 					`w-full h-full fixed left-0 top-0 transition-opacity duration-200 backdrop-blur-3xl z-40`,
 
 				)}
@@ -94,8 +94,10 @@ export function PanelOverlay() {
 			>
 				{/* Inner container for scrolling */}
 				{panelContent ? (<>
-					<div className={panelTitleColor + ' text-xl flex py-5 justify-center items-center'}>
-						{panelTitle}
+					<div className={'text-lg flex py-5 justify-center items-center font-bold -mb-10'}>
+						<div className={cn(panelTitleColor, 'p-2 px-10 rounded-full')}>
+							{panelTitle}
+						</div>
 					</div>
 					<div className={"h-full rounded-xl overflow-hidden overflow-x-hidden  pl-1 pr-3 py-3 " + bgColor}>
 						<div className={"h-full overflow-y-scroll overflow-x-hidden  rounded-xl " + bgColor}>

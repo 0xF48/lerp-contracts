@@ -7,7 +7,7 @@ import { PANEL, STYLE } from "@/enums";
 
 export function StakePanelContent() {
 
-	return <div className={'w-full h-full bg-yellow-500 text-black p-10'}>
+	return <div className={'w-full h-full p-10'}>
 		<div>BUY options</div>
 	</div>
 }
