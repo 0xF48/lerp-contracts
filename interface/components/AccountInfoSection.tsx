@@ -15,6 +15,9 @@ const truncateAddress = (address: string | undefined) => {
 export const AccountInfoSection: React.FC = () => {
 	const { address: accountAddress, isConnected } = useAccount();
 	const { userLftBalance } = useLerpToken();
+	if (!isConnected) {
+		return null; // Don't render if not connected
+	}
 
 	// Placeholder for staked amount
 	const stakedAmount = "0.00";
@@ -28,7 +31,7 @@ export const AccountInfoSection: React.FC = () => {
 			</div>
 
 			{/* Blue Info Card */}
-			<div className="bg-blue-500 text-white rounded-xl p-6 w-full flex flex-col gap-4">
+			<div className="bg-blue-500 text-white rounded-xl p-8 w-full flex flex-col gap-4">
 				{/* Available Balance */}
 				<div className="flex justify-between items-baseline">
 					<span className="text-lg">Available</span>

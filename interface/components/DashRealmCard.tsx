@@ -1,9 +1,3 @@
-import Link from "next/link"
-
-import cn from "classnames"
-import { STYLE } from "@/enums"
-
-
 export function DashRealmCard({ config, children }: { config: any, children?: React.ReactNode }) {
 	const realmImagePreview = config.media.static ? config.media.static.src : undefined
 	const realmBannerPreview = config.bannerUrl ? config.bannerUrl : undefined
@@ -34,10 +28,6 @@ export function DashRealmCard({ config, children }: { config: any, children?: Re
 			</>
 
 		})}
-
-
-
-
 
 	</div >
 

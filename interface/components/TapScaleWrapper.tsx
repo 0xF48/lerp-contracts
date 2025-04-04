@@ -52,11 +52,11 @@ export const TapScaleWrapper: React.FC<TapScaleWrapperProps> = ({
 	}
 
 	return (
-		<div className={className}>
+		<div className={className + ' ' + 'user-select-none select-none'}>
 			<motion.div
 				className={cn(
 					isTapped ? 'transition-none' : 'hover:scale-102 transition-transform duration-300',
-					'will-change-transform',
+					'will-change-transform ',
 					"backdrop-blur-xl rounded-2xl overflow-hidden",
 					'rounded-2xl',
 					'ring-2 ring-blue-500/50', // Ring color and base width

@@ -10,7 +10,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function AccountBalanceButton() {
 
-	return <ConnectButton />
+	return <ConnectButton chainStatus="name" />
 
 
 

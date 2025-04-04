@@ -46,7 +46,7 @@ export function DappProvider({ children }: { children: React.ReactNode }) {
 		<WagmiProvider config={wagmiConfig}>
 			<QueryClientProvider client={queryClient}>
 				{/* Ensure RainbowKitProvider uses the same config or is compatible */}
-				<RainbowKitProvider>
+				<RainbowKitProvider modalSize="compact" chains={[localHardhat]} >
 					{children}
 				</RainbowKitProvider>
 			</QueryClientProvider>
