@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from "hardhat"; // Corrected import
 
 async function main() {
 	const [deployer] = await ethers.getSigners();

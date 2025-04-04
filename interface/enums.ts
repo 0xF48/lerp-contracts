@@ -11,7 +11,7 @@ export const enum PANEL {
 }
 
 export const PANEL_TITLES = {
-	[PANEL.BUY]: "Swap $LFT",
+	[PANEL.BUY]: "Buy $LFT", // Updated title
 	[PANEL.STAKE]: "Stake $LFT",
 	[PANEL.UNSTAKE]: "Unstake $LFT",
 	[PANEL.CLAIM]: "Claim Earnings",
@@ -37,4 +37,6 @@ export const enum STYLE {
 	BORDER_DASHED_TOP = 'border-long-dashed-t',
 	BORDER_DASHED_BOT = 'border-long-dashed-b',
 	BORDER_DASHED_LEFT = 'border-long-dashed-l',
+
+	INPUT_FIELD = 'p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none', // Added basic input style
 }

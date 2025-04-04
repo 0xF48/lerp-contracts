@@ -24,30 +24,30 @@ export function usePanel() {
 
 	let panelOverlayColor = 'bg-black/90';
 	if (currentPanel == PANEL.BUY) {
-		panelOverlayColor = 'bg-blue-950/90';
+		panelOverlayColor = 'bg-[#000782]/90';
 	} else if (currentPanel == PANEL.STAKE) {
 		panelOverlayColor = 'bg-yellow-950/90';
 	} else if (currentPanel == PANEL.CLAIM) {
 		panelOverlayColor = 'bg-green-950/90';
 	}
 
-	let panelBackgroundColor = 'bg-gray-800'
+	let panelStyle = 'bg-gray-800'
 	let panelTitleColor = 'bg-gray-800 text-white';
 	if (currentPanel === PANEL.BUY) {
-		panelBackgroundColor = 'bg-white';
-		panelTitleColor = 'bg-blue-600 text-white';
+		panelStyle = 'bg-[blue] ';
+		panelTitleColor = 'text-white';
 	} else if (currentPanel === PANEL.STAKE) {
-		panelBackgroundColor = 'bg-white';
+		panelStyle = 'bg-white';
 		panelTitleColor = 'bg-yellow-300 text-black';
 	} else if (currentPanel === PANEL.CLAIM) {
-		panelBackgroundColor = 'bg-white';
+		panelStyle = 'bg-white';
 		panelTitleColor = 'bg-green-500 text-white';
 	}
 
 	return {
 		currentPanel,
 		panelOverlayColor,
-		panelBackgroundColor,
+		panelStyle,
 		panelTitleColor,
 		navToPanel,
 		hidePanel,

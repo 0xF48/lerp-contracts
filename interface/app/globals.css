@@ -22,6 +22,20 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-border: #d6d6d6;
+
+  /* Custom Blue Palette */
+  --color-blue-50: #E6E6FF;
+  --color-blue-100: #B3B3FF;
+  --color-blue-200: #8080FF;
+  --color-blue-300: #4D4DFF;
+  --color-blue-400: #1A1AFF;
+  --color-blue-500: #0000FF;
+  /* Pure Blue */
+  --color-blue-600: #0000CC;
+  --color-blue-700: #000099;
+  --color-blue-800: #000066;
+  --color-blue-900: #000033;
+  --color-blue-950: #00001A;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,7 +50,6 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-
 
 
 
@@ -110,10 +123,6 @@ body {
   background-repeat: repeat-y;
   pointer-events: none;
 }
-
-
-
-
 
 
 

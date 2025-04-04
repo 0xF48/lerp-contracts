@@ -9,7 +9,8 @@ import { DashNote } from "@/components/DashNote";
 import { DashRealmsList } from "@/components/DashRealmsList";
 import { DashTokenStatSections } from "@/components/DashTokenStatSections";
 import { BuyPanelButton } from "@/components/panels/BuyPanel";
-import { TapScaleWrapper } from "@/components/TapScaleWrapper"; // Import the new wrapper
+import { TapScaleWrapper } from "@/components/TapScaleWrapper";
+import { AccountInfoCard } from "@/components/AccountInfoCard"; // Import the new component
 
 
 export default function Dash() {
@@ -27,18 +28,14 @@ export default function Dash() {
       </Suspense>
     </div>
     <div className={cn(STYLE.PAGE_CONTENT, 'items-center')}>
-      <div className="w-full flex items-center justify-center py-10">
-        <div className="flex flex-row gap-5 items-center">
-          <AnimatedLerpLogo />
-          <h1 className="text-2xl font-bold">$LFT</h1>
-        </div>
-      </div>
-      <div className="w-full items-center flex-row flex gap-8 justify-center mb-6">
-        <Link href={NAV.DOCS} className={cn(STYLE.BLACK_BUTTON_CHIP, 'px-6')}>Docs</Link>
-        <Link href='https://github.com/lerp-io' className="underline">source</Link>
-        <Link href='https://etherscan.io/' className="underline">etherscan</Link>
-      </div>
+      {/* Removed Logo/Links Section - Assuming it's replaced or moved */}
+      {/* <div className="w-full flex items-center justify-center py-10"> ... </div> */}
+      {/* <div className="w-full items-center flex-row flex gap-8 justify-center mb-6"> ... </div> */}
 
+      {/* Add Account Info Card */}
+      <AccountInfoCard />
+
+      {/* Existing Sections */}
       <div className={cn(STYLE.BORDER_DASHED_TOP, 'w-full flex flex-col md:flex-row')}>
         <div className="w-full flex flex-col gap-10 p-8">
           <DashTokenStatSections />
@@ -51,8 +48,12 @@ export default function Dash() {
 
       {/* Wrap BuyPanelButton with TapScaleWrapper inside Suspense */}
       <Suspense fallback={<div>Loading...</div>}>
+
         <BuyPanelButton />
+
       </Suspense>
+
+
 
     </div>
     <div className="relative  text-black pt-20 min-h-[20em] flex flex-row justify-center">

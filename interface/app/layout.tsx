@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DappProvider } from "@/components/DappProvider";
 import { PanelOverlay } from "@/components/PanelOverlay";
+import { ErrorHandlerProvider } from "@/contexts/ErrorHandlerContext"; // Import Provider
+import { ErrorOverlay } from "@/components/ErrorOverlay"; // Import Overlay
 // import { usePathname } from "next/navigation";
-import { usePanel } from "@/hooks/usePanel";
+// import { usePanel } from "@/hooks/usePanel"; // Removed unused import
 
 
 export const metadata: Metadata = {
@@ -27,12 +29,17 @@ export default function RootLayout({
       <body
         className={`font-ocra antialiased`}
       >
-        <DappProvider>
-          {children}
-          <Suspense fallback={null}> {/* Or a minimal loading indicator */}
-            <PanelOverlay />
-          </Suspense>
-        </DappProvider>
+        {/* Wrap DappProvider with ErrorHandlerProvider */}
+        <ErrorHandlerProvider>
+          <DappProvider>
+            {children}
+            <Suspense fallback={null}> {/* Or a minimal loading indicator */}
+              <PanelOverlay />
+            </Suspense>
+          </DappProvider>
+          {/* Render ErrorOverlay outside DappProvider but inside ErrorHandlerProvider */}
+          <ErrorOverlay />
+        </ErrorHandlerProvider>
 
       </body>
     </html>

@@ -16,7 +16,7 @@ const STIFFNESS = 500
 const DAMPING = 30
 
 export function PanelOverlay() {
-	const { currentPanel, hidePanel, panelOverlayColor, panelTitleColor, panelBackgroundColor } = usePanel();
+	const { currentPanel, hidePanel, panelOverlayColor, panelTitleColor, panelStyle } = usePanel();
 	const ref = useRef<HTMLDivElement>(null);
 	let panelContent = null;
 	if (currentPanel) {
@@ -31,7 +31,7 @@ export function PanelOverlay() {
 
 	const panelTitle = PANEL_TITLES[currentPanel as PANEL] || "Panel";
 
-	const bgColor = panelBackgroundColor;
+
 
 	useEffect(() => {
 		if (!currentPanel) return;
@@ -68,7 +68,7 @@ export function PanelOverlay() {
 				onClick={hidePanel}
 				ref={ref}
 				className={cn(
-					currentPanel ? "opacity-100 pointer-events-auto bg-gray-200/80" : "opacity-0 pointer-events-none bg-white/0",
+					currentPanel ? "opacity-100 pointer-events-auto " + panelOverlayColor : "opacity-0 pointer-events-none bg-white/0",
 					`w-full h-full fixed left-0 top-0 transition-opacity duration-200 backdrop-blur-3xl z-40`,
 
 				)}
@@ -87,20 +87,18 @@ export function PanelOverlay() {
 						`, panelContent ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")}
 				initial={{ scale: SCALE_START, y: Y_START }} // Start scaled down, transparent, and moved down
 				animate={{ scale: !panelContent ? SCALE_START : 1, y: !panelContent ? Y_START : 0 }} // Animate to full scale, opaque, and original position
-				// exit={{ scale: 0.5, y: 100 }} // Animate out similarly
-
 				transition={{ type: "spring", stiffness: STIFFNESS, damping: DAMPING }} // Elastic spring animation
 				style={{ x: "0%", y: "0%" }} // Keep centering logic (applied after transform)
 			>
 				{/* Inner container for scrolling */}
 				{panelContent ? (<>
-					<div className={'text-lg flex py-5 justify-center items-center font-bold -mb-10'}>
-						<div className={cn(panelTitleColor, 'p-2 px-10 rounded-full')}>
+					<div className={'text-lg flex py-5 justify-center items-center'}>
+						<div className={cn(panelTitleColor)}>
 							{panelTitle}
 						</div>
 					</div>
-					<div className={"h-full rounded-xl overflow-hidden overflow-x-hidden  pl-1 pr-3 py-3 " + bgColor}>
-						<div className={"h-full overflow-y-scroll overflow-x-hidden  rounded-xl " + bgColor}>
+					<div className={"h-full rounded-xl overflow-hidden overflow-x-hidden  pl-1 pr-3 py-3 " + panelStyle}>
+						<div className={"h-full overflow-y-scroll overflow-x-hidden  rounded-xl"}>
 							{panelContent}
 						</div>
 					</div>
