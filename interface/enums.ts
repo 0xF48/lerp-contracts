@@ -4,11 +4,18 @@ export const enum NAV {
 }
 
 export const enum PANEL {
-	BUY = "buy",
+	BUY = "BUY",
 	CLAIM = "claim",
 	STAKE = "stake",
 	UNSTAKE = "unstake",
 }
+
+export const PANEL_TITLES = {
+	[PANEL.BUY]: "Swap $LFT",
+	[PANEL.STAKE]: "Stake $LFT",
+	[PANEL.UNSTAKE]: "Unstake $LFT",
+	[PANEL.CLAIM]: "Claim Earnings",
+} as const;
 
 export const enum STYLE {
 	YELLOW_BUTTON_HOVER = 'hover:ring-4 hover:ring-yellow-300/30 hover:bg-yellow-300 transition-all',

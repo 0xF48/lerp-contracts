@@ -2,14 +2,21 @@
 
 import cn from 'classnames';
 import { usePanel } from '@/hooks/usePanel';
-import { useEffect, useRef, useState } from 'react';
-import { PANEL } from '@/enums';
+import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PANEL, PANEL_TITLES } from '@/enums';
 import { BuyPanelContent } from './panels/BuyPanel';
 import { StakePanelContent } from './panels/StakePanel';
 import { ClaimPanelContent } from './panels/ClaimPanel';
 
+
+const Y_START = 100
+const SCALE_START = 0.8
+const STIFFNESS = 500
+const DAMPING = 30
+
 export function PanelOverlay() {
-	const { currentPanel, hidePanel, panelOverlayColor, panelBackgroundColor } = usePanel();
+	const { currentPanel, hidePanel, panelOverlayColor, panelTitleColor, panelBackgroundColor } = usePanel();
 	const ref = useRef<HTMLDivElement>(null);
 	let panelContent = null;
 	if (currentPanel) {
@@ -21,6 +28,8 @@ export function PanelOverlay() {
 			panelContent = <ClaimPanelContent />
 		}
 	}
+
+	const panelTitle = PANEL_TITLES[currentPanel as PANEL] || "Panel";
 
 	const bgColor = panelBackgroundColor;
 
@@ -64,16 +73,41 @@ export function PanelOverlay() {
 
 				)}
 			/>
-			{panelContent ? (
-				<div className="z-50 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[30em] w-full h-[40em] max-h-full rounded-2xl overflow-hidden">
-					{/* Inner container for scrolling */}
+
+
+			<motion.div
+				key="panel-content" // Add key for AnimatePresence
+				className={cn(`
+							z-50 fixed left-1/2 top-1/2
+							-translate-x-1/2 -translate-y-1/2
+							max-w-[30em] w-full h-[40em] max-h-full
+							rounded-2xl overflow-hidden
+							transition-opacity duration-300
+							origin-bottom /* Set transform origin for scale */
+						`, panelContent ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")}
+				initial={{ scale: SCALE_START, y: Y_START }} // Start scaled down, transparent, and moved down
+				animate={{ scale: !panelContent ? SCALE_START : 1, y: !panelContent ? Y_START : 0 }} // Animate to full scale, opaque, and original position
+				// exit={{ scale: 0.5, y: 100 }} // Animate out similarly
+
+				transition={{ type: "spring", stiffness: STIFFNESS, damping: DAMPING }} // Elastic spring animation
+				style={{ x: "0%", y: "0%" }} // Keep centering logic (applied after transform)
+			>
+				{/* Inner container for scrolling */}
+				{panelContent ? (<>
+					<div className={panelTitleColor + ' text-xl flex py-5 justify-center items-center'}>
+						{panelTitle}
+					</div>
 					<div className={"h-full rounded-xl overflow-hidden overflow-x-hidden  pl-1 pr-3 py-3 " + bgColor}>
 						<div className={"h-full overflow-y-scroll overflow-x-hidden  rounded-xl " + bgColor}>
 							{panelContent}
 						</div>
 					</div>
-				</div>
-			) : null}
+				</>
+
+				) : null}
+			</motion.div>
+
+
 		</>
 
 
