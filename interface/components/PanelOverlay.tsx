@@ -35,11 +35,17 @@ export function PanelOverlay() {
 		document.body.style.top = `-${scrollY}px`;
 		document.body.style.width = '100%';
 
+
+		if (document.body.scrollHeight > window.innerHeight) {
+			document.body.style.paddingRight = '7px';
+		}
+
 		return () => {
 			// Reset the styles on cleanup
 			document.body.style.position = '';
 			document.body.style.top = '';
 			document.body.style.width = '';
+			document.body.style.paddingRight = '';
 
 			// Restore the scroll position
 			window.scrollTo(0, scrollY);
@@ -53,9 +59,9 @@ export function PanelOverlay() {
 				onClick={hidePanel}
 				ref={ref}
 				className={cn(
-					currentPanel ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
+					currentPanel ? "opacity-100 pointer-events-auto " + panelOverlayColor : "opacity-0 pointer-events-none bg-white/0",
 					`w-full h-full fixed left-0 top-0 transition-opacity duration-200 backdrop-blur-3xl z-40`,
-					panelOverlayColor
+
 				)}
 			/>
 			{panelContent ? (

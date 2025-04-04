@@ -67,11 +67,15 @@ export default async function realmIdPage({ params }: any) {
 							</div>
 						})}
 						<div>
-							<ClaimPanelButton />
+
 
 						</div>
 					</div>
 				</div>
+				<div className="w-full p-10 flex items-center justify-center">
+					<ClaimPanelButton />
+				</div>
+
 
 
 			</div>
