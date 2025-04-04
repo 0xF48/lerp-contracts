@@ -9,6 +9,7 @@ import { DashNote } from "@/components/DashNote";
 import { DashRealmsList } from "@/components/DashRealmsList";
 import { DashTokenStatSections } from "@/components/DashTokenStatSections";
 import { BuyPanelButton } from "@/components/panels/BuyPanel";
+import { TapScaleWrapper } from "@/components/TapScaleWrapper"; // Import the new wrapper
 
 
 export default function Dash() {
@@ -48,11 +49,10 @@ export default function Dash() {
         </div>
       </div>
 
+      {/* Wrap BuyPanelButton with TapScaleWrapper inside Suspense */}
       <Suspense fallback={<div>Loading...</div>}>
         <BuyPanelButton />
       </Suspense>
-
-
 
     </div>
     <div className="relative  text-black pt-20 min-h-[20em] flex flex-row justify-center">
