@@ -15,31 +15,22 @@ export const ErrorOverlay: React.FC = () => {
 	// Basic styling, adjust as needed
 	const overlayStyle = `
     fixed inset-0 z-[100]  /* High z-index to be on top */
-    bg-black/80 backdrop-blur-sm
+	backdrop-blur-3xl
+    bg-red-950/90
     flex items-center justify-center
     p-4
   `;
 
 	const contentStyle = `
-    bg-red-800/90 border border-red-600 rounded-lg
+    bg-red-600 rounded-xl
     p-6 max-w-md w-full
-    text-white relative shadow-xl
-  `;
-
-	const closeButtonStyle = `
-    absolute top-2 right-2 p-1
-    text-red-200 hover:text-white
-    cursor-pointer rounded-full hover:bg-red-700/50
-    transition-colors
+    text-white relative
   `;
 
 	return (
-		<div className={cn(overlayStyle)}>
-			<div className={cn(contentStyle)}>
-				<button onClick={clearError} className={cn(closeButtonStyle)} aria-label="Close error">
-					<XIcon size={20} />
-				</button>
-				<h3 className="text-lg font-bold mb-2 border-b border-red-600 pb-1">Error Occurred</h3>
+		<div className={cn(overlayStyle)} onClick={clearError}>
+			<div className={cn(contentStyle)} onClick={(e) => e.stopPropagation()}>
+				<h3 className="text-lg font-bold text-black py-5 mb-3 w-full flex items-center justify-center">Critical Error</h3>
 				<p className="text-sm break-words">
 					{/* Attempt to provide a more user-friendly message */}
 					{error.message || 'An unknown error occurred.'}

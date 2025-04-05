@@ -1,7 +1,7 @@
 'use client'
 
 import { useTopHolderStats } from "@/hooks/useTopHolderStats"
-import { SquareChart } from "./SquareChart"
+import { SquareChart } from "../util/SquareChart"
 import { useState } from "react"
 
 export function TokenTopHoldersStat() {

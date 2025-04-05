@@ -1,5 +1,34 @@
+import { PublicRealmConfig } from "./enums";
+
+
+// THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
+export const LOCAL_LERP_PUBLIC_CONFIG: { realms: PublicRealmConfig[] } = {
+	realms: [
+		{
+			"id": "podrun",
+			"name": "Pod Run",
+			"currentVersion": "0.1-DEV",
+			"bannerUrl": "/assets/realms/podrun/podrun.png",
+			"media": {
+				"static": {
+					"src": "/assets/realms/podrun/reel-1.jpg"
+				}
+			},
+			"contract": {
+				"address": "0x67EA526eF4b2713d248b55bafe7352b66Fd637bf",
+				"chain": 31337,
+				"blockNumber": "0",
+				"assets": []
+			}
+		}
+	]
+}
+
+
+
 // Address of the deployed LerpToken contract on the Hardhat network (localhost)
 export const LERP_TOKEN_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+
 
 // ABI of the LerpToken contract
 export const LERP_TOKEN_ABI = [

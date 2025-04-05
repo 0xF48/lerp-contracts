@@ -90,6 +90,15 @@ body {
   pointer-events: none;
 }
 
+.border-long-dashed-color-stone::after {
+  background-image: linear-gradient(to right, var(--color-stone-700) 30%, transparent 30%) !important;
+}
+
+.border-long-dashed-color-blue::after {
+  background-image: linear-gradient(to right, var(--color-blue-700) 30%, transparent 30%) !important;
+}
+
+
 .border-long-dashed-l {
   position: relative;
 }

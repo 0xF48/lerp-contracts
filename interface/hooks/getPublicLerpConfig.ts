@@ -1,20 +1,35 @@
+import { PublicConfig } from "@/enums";
 import path from "path";
-
-export async function getPublicLerpConfig() {
+import { LOCAL_LERP_PUBLIC_CONFIG } from '@/constants'
+export async function getPublicLerpConfig(): Promise<{ error: any, config: PublicConfig }> {
+	let apiError = null
 	const url = path.join(process.env.LERP_API_URL as string, '/config')
-	console.log(url)
-	const res = await fetch(url, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			'Accept': 'application/json',
-		},
-	});
 
-	if (!res.ok) {
-		throw new Error('Failed to fetch data');
+	try {
+
+		const res = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+			},
+		});
+		const remoteConfig = await res.json();
+		if (JSON.stringify(remoteConfig) !== JSON.stringify(LOCAL_LERP_PUBLIC_CONFIG)) {
+			apiError = new Error("Lerp Config does not match local config");
+		}
+	} catch (e) {
+		apiError = e
 	}
-	const data = await res.json();
 
-	return data
+
+	// if (apiError) {
+	// 	console.warn("API ERROR", apiError);
+	// }
+
+
+	return {
+		error: apiError,
+		config: LOCAL_LERP_PUBLIC_CONFIG,
+	}
 }

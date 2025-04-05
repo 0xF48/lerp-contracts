@@ -31,31 +31,30 @@ import Link from 'next/link'; // Import Link
 export async function DashRealmsList() {
 
 	// const realms = TEST_DATA
-	const config = await getPublicLerpConfig();
+	const data = await getPublicLerpConfig();
 
-	// Check if config or config.realms is null/undefined before mapping
-	if (!config?.realms) {
-		return <div className="p-8 text-gray-500">No realms found.</div>; // Or some other placeholder/error
+	if (data.error && !data.config) {
+		return <div className={classNames('w-full flex flex-col gap-8 p-8')}>
+			<div className="text-gray-400 w-full justify-between flex flex-row font-mono"> {/* Added font-mono */}
+				Realms:
+
+			</div>
+			<div className="bg-red-500 text-white rounded-xl p-4">FAILED TO CONNECT TO LERP API</div>
+		</div>
 	}
 
-	const realmCards = config.realms.map((realm: any) => { // Consider defining a proper type for realm
-		// Construct the link href using the realm id
-		const realmDetailPath = `/realm/${realm.id}`;
-		return (
-			<Link href={realmDetailPath} key={realm.id} className="block hover:scale-[1.01] transition-transform duration-200 ease-out"> {/* Wrap card in Link */}
-				<DashRealmCard config={realm} />
-			</Link>
-		);
-	});
+
 
 	return (
 		<div className={classNames('w-full flex flex-col gap-8 p-8')}>
 			<div className="text-gray-400 w-full justify-between flex flex-row font-mono"> {/* Added font-mono */}
 				Realms:
-				<span className='font-bold text-black'>{realmCards.length}</span>
+				<span className='font-bold text-black'>{data.config.realms.length}</span>
 			</div>
+			{data.error && <div className="bg-red-500 text-white rounded-xl p-4">FAILED TO CONNECT TO LERP API, USING CACHE, {data.error.message}</div>}
+
 			{/* Render the array of Link-wrapped cards */}
-			{realmCards}
+			{data.config.realms.map((realm: any) => <DashRealmCard key={realm.id} config={realm} />)}
 		</div>
 	);
 }

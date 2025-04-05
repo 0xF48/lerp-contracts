@@ -33,14 +33,14 @@ export const AccountInfoSection: React.FC = () => {
 			{/* Blue Info Card */}
 			<div className="bg-blue-500 text-white rounded-xl p-8 w-full flex flex-col gap-4">
 				{/* Available Balance */}
-				<div className={cn("flex justify-between items-baseline pb-4", STYLE.BORDER_DASHED_BOT)}> {/* Added padding-bottom and border */}
+				<div className={cn("flex justify-between items-baseline pb-4", STYLE.BORDER_DASHED_BOT_BLUE)}> {/* Added padding-bottom and border */}
 					<span className="text-lg">Available</span>
 					<div className="text-lg font-bold">{isConnected ? userLftBalance : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>
 
 				{/* Staked Balance */}
 				{/* Added padding-top/bottom and border */}
-				<div className={cn("flex justify-between items-baseline py-4", STYLE.BORDER_DASHED_BOT)}>
+				<div className={cn("flex justify-between items-baseline py-4", STYLE.BORDER_DASHED_BOT_BLUE)}>
 					<span className="text-lg text-yellow-300">Staked</span>
 					<div className="text-lg font-bold">{isConnected ? stakedAmount : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>

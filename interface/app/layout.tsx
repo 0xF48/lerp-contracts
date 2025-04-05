@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
-import { DappProvider } from "@/components/DappProvider";
-import { PanelOverlay } from "@/components/PanelOverlay";
+import { DappProvider } from "@/components/util/DappProvider";
+import { PanelOverlay } from "@/components/util/PanelOverlay";
 import { ErrorHandlerProvider } from "@/contexts/ErrorHandlerContext"; // Import Provider
-import { ErrorOverlay } from "@/components/ErrorOverlay"; // Import Overlay
+import { ErrorOverlay } from "@/components/util/ErrorOverlay"; // Import Overlay
 // import { usePathname } from "next/navigation";
 // import { usePanel } from "@/hooks/usePanel"; // Removed unused import
 

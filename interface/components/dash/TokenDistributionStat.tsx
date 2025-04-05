@@ -1,7 +1,7 @@
 'use client'
 
 import { useTokenDistributionStats } from "@/hooks/useTokenDistributionStats";
-import { SquareChart } from "./SquareChart";
+import { SquareChart } from "../util/SquareChart";
 import { useState } from "react";
 
 

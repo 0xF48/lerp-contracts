@@ -5,9 +5,9 @@ import { usePanel } from '@/hooks/usePanel';
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PANEL, PANEL_TITLES } from '@/enums';
-import { BuyPanelContent } from './panels/BuyPanel';
-import { StakePanelContent } from './panels/StakePanel';
-import { ClaimPanelContent } from './panels/ClaimPanel';
+import { BuyPanelContent } from '../panels/BuyPanel';
+import { StakePanelContent } from '../panels/StakePanel';
+import { ClaimPanelContent } from '../panels/ClaimPanel';
 
 
 const Y_START = 100

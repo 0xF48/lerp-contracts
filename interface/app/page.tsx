@@ -1,16 +1,16 @@
 import { Suspense } from "react";
 import { ChevronLeftIcon } from "lucide-react";
 import { NAV, STYLE } from "@/enums";
-import AccountBalanceButton from "@/components/AccountBalanceButton";
-import { AnimatedLerpLogo } from "@/components/AnimatedLerpLogo";
+import AccountBalanceButton from "@/components/util/AccountBalanceButton";
+import { AnimatedLerpLogo } from "@/components/util/AnimatedLerpLogo";
 import Link from "next/link";
 import cn from "classnames";
-import { DashNote } from "@/components/DashNote";
-import { DashRealmsList } from "@/components/DashRealmsList";
-import { DashTokenStatSections } from "@/components/DashTokenStatSections";
+import { DashNote } from "@/components/dash/DashWelcomeNote";
+import { DashRealmsList } from "@/components/dash/DashRealmsList";
+import { DashGlobalStatSections } from "@/components/dash/DashGlobalStatSections";
 import { BuyPanelButton } from "@/components/panels/BuyPanel";
-import { TapScaleWrapper } from "@/components/TapScaleWrapper"; // Import the new wrapper
-import { AccountInfoSection } from "@/components/AccountInfoSection";
+import { TapScaleWrapper } from "@/components/util/TapScaleWrapper"; // Import the new wrapper
+import { AccountInfoSection } from "@/components/dash/AccountInfoSection";
 
 
 export default function Dash() {
@@ -43,7 +43,7 @@ export default function Dash() {
       <div className={cn(STYLE.BORDER_DASHED_TOP, 'w-full flex flex-col md:flex-row')}>
 
         <div className="w-full flex flex-col gap-10 p-8">
-          <DashTokenStatSections />
+          <DashGlobalStatSections />
         </div>
         <div className={cn(STYLE.BORDER_DASHED_LEFT, 'w-full')}>
 

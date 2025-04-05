@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import cn from "classnames";
 import { usePanel } from "@/hooks/usePanel";
 import { PANEL, STYLE } from "@/enums";
-import { TapScaleWrapper } from "../TapScaleWrapper";
+import { TapScaleWrapper } from "../util/TapScaleWrapper";
 import { useLerpToken } from '@/hooks/useLerpToken';
 import { formatUnits, parseUnits, isAddress } from 'viem';
 import { MinusIcon, PlusIcon } from 'lucide-react'; // Import icons
