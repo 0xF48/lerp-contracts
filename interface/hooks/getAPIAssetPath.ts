@@ -8,7 +8,7 @@ export function getAPIAssetPath(assetPath: string | undefined | null): string {
 	if (assetPath.startsWith('http')) return assetPath;
 
 	// Get the base API URL from the environment variable (must be prefixed with NEXT_PUBLIC_)
-	const baseApiUrl = process.env.LERP_API_URL;
+	const baseApiUrl = process.env.NEXT_PUBLIC_LERP_API_URL;
 
 	// Handle missing environment variable
 	if (!baseApiUrl) {

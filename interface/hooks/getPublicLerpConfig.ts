@@ -3,7 +3,7 @@ import path from "path";
 import { LOCAL_LERP_PUBLIC_CONFIG } from '@/constants'
 export async function getPublicLerpConfig(): Promise<{ error: any, config: PublicConfig }> {
 	let apiError = null
-	const url = path.join(process.env.LERP_API_URL as string, '/config')
+	const url = path.join(process.env.NEXT_PUBLIC_LERP_API_URL as string, '/config')
 
 	try {
 

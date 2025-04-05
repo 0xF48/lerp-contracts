@@ -2,8 +2,8 @@ import { getAPIAssetPath } from "@/hooks/getAPIAssetPath";
 import { PublicRealmConfig } from "@/enums";
 
 export function RealmBanner({ config }: { config: PublicRealmConfig }) {
-	const realmImagePreview = config.media?.static?.src ? getAPIAssetPath(config.media.static.src) : undefined;
-	const realmBannerPreview = config.bannerUrl ? getAPIAssetPath(config.bannerUrl) : undefined;
+	const realmImagePreview = getAPIAssetPath(config.media.static.src);
+	const realmBannerPreview = getAPIAssetPath(config.bannerUrl);
 
 	return <div className="relative w-full h-32 rounded-xl object-cover bg-indigo-900 justify-center items-center content-center flex overflow-hidden"> {/* Adjusted bg */}
 		{realmImagePreview && <img src={realmImagePreview} alt="Realm Background" className="absolute inset-0 w-full h-full object-cover opacity-30" />} {/* Background image */}

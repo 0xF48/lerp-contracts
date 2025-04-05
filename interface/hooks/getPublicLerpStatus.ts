@@ -6,7 +6,7 @@ let CACHE: any = null
 export async function getPublicLerpStatus(): Promise<{ error: any, status: any }> {
 
 	try {
-		const url = path.join(process.env.LERP_API_URL as string, '/status')
+		const url = path.join(process.env.NEXT_PUBLIC_LERP_API_URL as string, '/status')
 
 		const res = await fetch(url, {
 			method: 'GET',
