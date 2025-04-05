@@ -33,20 +33,20 @@ export const AccountInfoSection: React.FC = () => {
 			{/* Blue Info Card */}
 			<div className="bg-blue-500 text-white rounded-xl p-8 w-full flex flex-col gap-4">
 				{/* Available Balance */}
-				<div className="flex justify-between items-baseline">
+				<div className={cn("flex justify-between items-baseline pb-4", STYLE.BORDER_DASHED_BOT)}> {/* Added padding-bottom and border */}
 					<span className="text-lg">Available</span>
 					<div className="text-lg font-bold">{isConnected ? userLftBalance : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>
 
 				{/* Staked Balance */}
-				<div className="flex justify-between items-baseline">
-					{/* Highlight "Staked" text differently if needed, e.g., text-yellow-300 */}
+				{/* Added padding-top/bottom and border */}
+				<div className={cn("flex justify-between items-baseline py-4", STYLE.BORDER_DASHED_BOT)}>
 					<span className="text-lg text-yellow-300">Staked</span>
 					<div className="text-lg font-bold">{isConnected ? stakedAmount : '0.00'} <span className='text-blue-700'>$LFT</span></div>
 				</div>
 
 				{/* Realm Selection Text */}
-				<div className="mt-2 text-sm text-blue-200">
+				<div className="pt-4 text-sm text-blue-200"> {/* Added padding-top */}
 					select a realm from below to view details and stake
 				</div>
 			</div>

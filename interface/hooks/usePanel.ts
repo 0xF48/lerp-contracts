@@ -37,8 +37,8 @@ export function usePanel() {
 		panelStyle = 'bg-[blue] ';
 		panelTitleColor = 'text-white';
 	} else if (currentPanel === PANEL.STAKE) {
-		panelStyle = 'bg-white';
-		panelTitleColor = 'bg-yellow-300 text-black';
+		panelStyle = 'bg-yellow-400';
+		panelTitleColor = 'text-yellow-400';
 	} else if (currentPanel === PANEL.CLAIM) {
 		panelStyle = 'bg-white';
 		panelTitleColor = 'bg-green-500 text-white';
