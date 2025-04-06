@@ -27,7 +27,8 @@ export const ErrorHandlerProvider: React.FC<{ children: ReactNode }> = ({ childr
 	}, []);
 
 	const clearError = useCallback(() => {
-		setErrorState(null);
+		console.log("tried to clear error state but not allowed");
+		// setErrorState(null);
 	}, []);
 
 	return (

@@ -11,27 +11,6 @@ export const enum PANEL {
 }
 
 
-export type PublicRealmConfig = {
-	id: string
-	name: string
-	bannerUrl: string
-	currentVersion: string
-	media: {
-		static: {
-			src: string
-		}
-	}
-	contract: {
-		address: string,
-		chain: number,
-		blockNumber: string,
-		assets: any
-	}
-}
-
-export type PublicConfig = {
-	realms: PublicRealmConfig[]
-}
 
 export const PANEL_TITLES = {
 	[PANEL.BUY]: "Buy $LFT",

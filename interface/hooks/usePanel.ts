@@ -1,53 +1,84 @@
 'use client';
 
-import { PANEL } from "@/enums";
-import { useRouter, useSearchParams } from "next/navigation";
+import { PANEL } from "../enums"; // Use relative path
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useCallback } from "react";
+
+// Update PanelContext type
+export interface PanelContext {
+	realmId?: string; // Keep realmId
+	// realmName?: string; // Remove realmName
+}
 
 export function usePanel() {
 	const router = useRouter();
+	const pathname = usePathname(); // Get current pathname
 	const searchParams = useSearchParams();
 
-	const currentPanel = searchParams.get('panel') || null;
+	// Read panel and realm context from URL
+	const currentPanel = searchParams.get('panel') as PANEL | null; // Cast to PANEL enum
+	const currentRealmId = searchParams.get('realmId') || undefined;
+	// const currentRealmName = searchParams.get('realmName') || undefined; // Remove realmName reading
 
-	const navToPanel = (panelEnum: PANEL) => {
-		console.log('navToPanel', panelEnum);
+	const navToPanel = useCallback((panelEnum: PANEL, context?: PanelContext) => {
+		console.log('navToPanel', panelEnum, context);
 		const sp = new URLSearchParams(searchParams.toString());
 		sp.set('panel', panelEnum);
-		router.push(`?${sp.toString()}`, { scroll: false });
-	};
 
-	const hidePanel = () => {
+		// Set realm context if provided
+		if (context?.realmId) {
+			sp.set('realmId', context.realmId);
+		} else {
+			sp.delete('realmId'); // Clear if not provided
+		}
+		// Remove realmName logic
+		// if (context?.realmName) {
+		//     sp.set('realmName', context.realmName);
+		// } else {
+		//     sp.delete('realmName');
+		// }
+
+		// Use pathname to preserve the current page route
+		router.push(`${pathname}?${sp.toString()}`, { scroll: false });
+	}, [router, searchParams, pathname]);
+
+	const hidePanel = useCallback(() => {
 		const sp = new URLSearchParams(searchParams.toString());
 		sp.delete('panel');
-		router.push(`?${sp.toString()}`, { scroll: false });
-	};
+		sp.delete('realmId'); // Also clear realm context when hiding
+		// sp.delete('realmName'); // Remove realmName clearing
+		router.push(`${pathname}?${sp.toString()}`, { scroll: false });
+	}, [router, searchParams, pathname]);
 
+	// --- Panel Specific Styling ---
 	let panelOverlayColor = 'bg-black/90';
 	if (currentPanel == PANEL.BUY) {
-		panelOverlayColor = 'bg-[#000782]/90';
+		panelOverlayColor = 'bg-blue-950/90';
 	} else if (currentPanel == PANEL.STAKE) {
 		panelOverlayColor = 'bg-yellow-950/90';
 	} else if (currentPanel == PANEL.CLAIM) {
 		panelOverlayColor = 'bg-green-950/90';
 	}
 
-	let panelStyle = 'bg-gray-800'
-	let panelTitleColor = 'bg-gray-800 text-white';
+	let panelBackgroundColor = 'bg-gray-800'
+	let panelTitleColor = 'text-gray-800';
 	if (currentPanel === PANEL.BUY) {
-		panelStyle = 'bg-[blue] ';
-		panelTitleColor = 'text-white';
+		panelBackgroundColor = 'bg-blue-500';
+		panelTitleColor = 'text-blue-500';
 	} else if (currentPanel === PANEL.STAKE) {
-		panelStyle = 'bg-yellow-400';
+		panelBackgroundColor = 'bg-yellow-400';
 		panelTitleColor = 'text-yellow-400';
 	} else if (currentPanel === PANEL.CLAIM) {
-		panelStyle = 'bg-white';
-		panelTitleColor = 'bg-green-500 text-white';
+		panelBackgroundColor = 'bg-green-500';
+		panelTitleColor = 'text-green-500';
 	}
 
 	return {
 		currentPanel,
+		currentRealmId, // Expose realmId
+		// currentRealmName, // Remove realmName exposure
 		panelOverlayColor,
-		panelStyle,
+		panelBackgroundColor,
 		panelTitleColor,
 		navToPanel,
 		hidePanel,

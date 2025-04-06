@@ -1,20 +1,41 @@
-import { PublicRealmConfig } from "./enums";
+export type PublicRealmConfig = {
+	id: string
+	stakeRealmId: number, //starts with 1, used for indicating the realm when staking
+	name: string
+	bannerUrl: string
+	currentVersion: string
+	media: {
+		static: {
+			src: string
+		}
+	}
+	contract: {
+		address: string,
+		chain: number,
+		blockNumber: string,
+		assets: any
+	}
+}
 
+export type PublicConfig = {
+	realms: PublicRealmConfig[]
+}
 
 // THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
 export const LOCAL_LERP_PUBLIC_CONFIG: { realms: PublicRealmConfig[] } = {
 	realms: [
 		{
-			"id": "podrun",
-			"name": "Pod Run",
-			"currentVersion": "0.1-DEV",
-			"bannerUrl": "/assets/realms/podrun/podrun.png",
-			"media": {
-				"static": {
-					"src": "/assets/realms/podrun/reel-1.jpg"
+			stakeRealmId: 1,
+			id: "podrun",
+			name: "Pod Run",
+			currentVersion: "0.1-DEV",
+			bannerUrl: "/assets/realms/podrun/podrun.png",
+			media: {
+				static: {
+					src: "/assets/realms/podrun/reel-1.jpg"
 				}
 			},
-			"contract": {
+			contract: {
 				"address": "0x67EA526eF4b2713d248b55bafe7352b66Fd637bf",
 				"chain": 31337,
 				"blockNumber": "0",
@@ -26,7 +47,7 @@ export const LOCAL_LERP_PUBLIC_CONFIG: { realms: PublicRealmConfig[] } = {
 
 
 
-// Address of the deployed LerpToken contract on the Hardhat network (localhost)
+// Address of the deployed LerpToken contract
 export const LERP_TOKEN_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 
