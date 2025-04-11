@@ -7,6 +7,6 @@
       "@/*": ["./*"]
     },
   },
-  "include": ["./scripts/**/*.ts", "./test/**/*.ts", "./typechain-types/**/*.ts", "hardhat.config.ts"],
+  "include": ["functions/**/*.ts", "./test/**/*.ts", "./typechain-types/**/*.ts", "hardhat.config.ts","./functions/**/*.ts"],
   "exclude": ["node_modules", "dist", "artifacts", "cache"]
 }

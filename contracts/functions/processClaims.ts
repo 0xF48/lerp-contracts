@@ -1,8 +1,8 @@
 import { createPublicClient, http, parseAbiItem, decodeEventLog, Address, Log, Hex, keccak256 as viemKeccak256, encodePacked } from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3';
+import { PublicRealmConfig } from '..';
 // Add .js extension for Node.js/ts-node compatibility (it will resolve to .ts)
-import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicRealmConfig } from '../index';
 
 // Internal type for processing
 interface AggregatedStakeInfo {
@@ -50,7 +50,7 @@ const bufToHex = (b: Buffer): Hex => `0x${b.toString('hex')}`;
 
 // --- Main Function ---
 
-export async function computeStakingData(
+export async function processClaims(
 	rpcUrl: string,
 	config: { realms: PublicRealmConfig[] },
 	lerpTokenAddress: Address,
@@ -199,19 +199,3 @@ export async function computeStakingData(
 	return finalResult;
 }
 
-// Example Usage (Uncommented)
-async function testCompute() {
-	const rpc = 'http://127.0.0.1:8545'; // Your Hardhat node RPC
-	const tokenAddr = LERP_TOKEN_CONTRACT_ADDRESS;
-	const configData = CONFIG;
-
-	try {
-		const stakingData = await computeStakingData(rpc, configData, tokenAddr, undefined, { includeLeafData: true });
-		console.log(JSON.stringify(stakingData, (key, value) =>
-			typeof value === 'bigint' ? value.toString() : value, 2)); // Pretty print with bigint handling
-	} catch (e) {
-		console.error("Test failed:", e);
-	}
-}
-
-testCompute(); // Uncommented call
