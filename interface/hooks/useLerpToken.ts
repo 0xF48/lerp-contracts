@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 // Use @root alias to import from config directory at the project root
-import { LERP_TOKEN_CONTRACT_ADDRESS, LERP_TOKEN_ABI } from '../../config';
+import { LERP_TOKEN_CONTRACT_ADDRESS, LERP_TOKEN_ABI } from '@lerp/contracts';
 import { parseUnits, formatUnits, parseEther, zeroAddress, Address, maxUint256 } from 'viem';
 import { useErrorHandler } from '../contexts/ErrorHandlerContext'; // Relative path ok here
 

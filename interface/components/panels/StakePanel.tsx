@@ -10,7 +10,7 @@ import { useAccount } from 'wagmi';
 import { ArrowLeftIcon, CheckIcon, LoaderIcon, MinusIcon, PlusIcon } from 'lucide-react';
 import { useErrorHandler } from '../../contexts/ErrorHandlerContext'; // Relative path
 // Use @root alias to import from config directory at the project root
-import { CONFIG } from '../../../config';
+import { CONFIG } from '@lerp/contracts';
 
 export function StakePanelContent() {
 	const { currentRealmId, hidePanel, currentPanel } = usePanel(); // Removed currentRealmName
