@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    // --- Overrides/Additions for Next.js ---
+    "target": "es5", // Next.js often targets es5 for broader browser support
+    "lib": ["dom", "dom.iterable", "esnext"], // Keep Next.js specific libs
+    "allowJs": true,
+    "skipLibCheck": true, // Keep skipLibCheck for Next.js build speed
+    "strict": false, // Next.js default is false, keep unless you want strict
+    "noEmit": true, // Next.js handles emission
+    "esModuleInterop": true,
+    "module": "esnext", // Required by Next.js
+    "moduleResolution": "bundler", // Recommended for Next.js/Webpack/Turbopack
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve", // Required by Next.js
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    // --- Path Aliases ---
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "types": ["react", "node"]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts", 
+  ],
+  "exclude": ["node_modules"]
+}

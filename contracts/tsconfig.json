@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "dist", // Optional: Hardhat usually handles its own artifacts
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+  },
+  "include": ["./scripts/**/*.ts", "./test/**/*.ts", "./typechain-types/**/*.ts", "hardhat.config.ts"],
+  "exclude": ["node_modules", "dist", "artifacts", "cache"]
+}

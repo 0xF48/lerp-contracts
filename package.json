@@ -1,0 +1,13 @@
+{
+  "name": "lerp-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "config",
+    "contracts",
+    "interface",
+    "functions"
+  ],
+  "scripts": {},
+  "devDependencies": {}
+}
