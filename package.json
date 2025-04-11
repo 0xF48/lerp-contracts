@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "config",
     "contracts",
-    "interface",
-    "functions"
+    "interface"
   ],
   "scripts": {},
   "devDependencies": {}
