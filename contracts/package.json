@@ -7,7 +7,7 @@
     "test": "hardhat test",
     "dev": "hardhat node",
     "deploy:local": "hardhat run functions/deployLerpToken.ts --network localhost",
-    "process:local": "npx ./functions/processTransactions.ts",
+    "update:local": "ts-node ./functions/updateClaims.ts",
     "deploy:sn1:polygonAmoy": "hardhat ignition deploy ./ignition/modules/LerpSN1.ts --network polygonAmoy",
     "deploy:sn1:hh": "hardhat ignition deploy ./ignition/modules/LerpSN1.ts --network localhost",
     "deploy:sn1:sepolia": "hardhat ignition deploy ./ignition/modules/LerpSN1.ts --network sepolia",
@@ -15,8 +15,10 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "ethers": "^6.13.5",
-    "hardhat-chai-matchers": "^0.0.1"
+    "hardhat-chai-matchers": "^0.0.1",
+    "mongodb": "^6.12.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",
@@ -35,6 +37,7 @@
     "@types/node": "^22.14.0",
     "chai": "^5.2.0",
     "dotenv": "^16.4.7",
+    "eslint": "^8.57.0",
     "hardhat": "^2.22.19",
     "hardhat-gas-reporter": "^1.0.8",
     "seedrandom": "^3.0.5",
@@ -42,7 +45,6 @@
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",
     "typescript": "^5.8.2",
-    "eslint": "^8.57.0",
     "wagmi": "^2.11.3"
   }
 }

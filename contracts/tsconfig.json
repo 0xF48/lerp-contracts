@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
+    "target": "ES2020", // Target a modern ES version
+    "module": "CommonJS", // Suitable for ts-node/Node.js execution
+    "moduleResolution": "node", // Standard Node resolution
+    "esModuleInterop": true, // Allow default imports from commonjs modules
+    "skipLibCheck": true, // Speed up compilation by skipping d.ts checks
+    "forceConsistentCasingInFileNames": true,
+    "strict": true, // Enable strict type checking
     "outDir": "dist", // Optional: Hardhat usually handles its own artifacts
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    },
+    }
   },
   "include": ["functions/**/*.ts", "./test/**/*.ts", "./typechain-types/**/*.ts", "hardhat.config.ts","./functions/**/*.ts"],
   "exclude": ["node_modules", "dist", "artifacts", "cache"]

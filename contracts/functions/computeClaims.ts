@@ -38,7 +38,7 @@ interface StakerDetails {
 }
 
 // Main result type, now with a single global root
-interface ComputeStakingResult {
+export interface ComputeClaimsData {
 	globalStakerMerkleRoot: Hex; // Single root for all stakes
 	realms: { [realmId: number]: RealmStakingData };
 	allStakers: { [address: Address]: StakerDetails };
@@ -50,13 +50,13 @@ const bufToHex = (b: Buffer): Hex => `0x${b.toString('hex')}`;
 
 // --- Main Function ---
 
-export async function processClaims(
+export async function computeClaims(
 	rpcUrl: string,
 	config: { realms: PublicRealmConfig[] },
 	lerpTokenAddress: Address,
 	fromBlock?: bigint,
 	options?: { includeLeafData?: boolean } // Option to include raw leaf data in output
-): Promise<ComputeStakingResult> {
+): Promise<ComputeClaimsData> {
 
 	const publicClient = createPublicClient({ transport: http(rpcUrl) });
 	const stakeEventAbiItem = 'event TokensStaked(address indexed user, uint16 indexed realmId, uint256 amount, uint256 unlockTime)';
@@ -185,7 +185,7 @@ export async function processClaims(
 
 	console.log("Staking data computation complete.");
 
-	const finalResult: ComputeStakingResult = {
+	const finalResult: ComputeClaimsData = {
 		globalStakerMerkleRoot,
 		realms: resultRealms,
 		allStakers: resultStakers,

@@ -10,8 +10,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@lerp/config": "0.0.1",
-
     "@metamask/providers": "^21.0.0",
     "@noble/hashes": "^1.7.1",
     "@rainbow-me/rainbowkit": "^2.2.4",
@@ -32,7 +30,8 @@
     "react-motion": "^0.5.2",
     "usehooks-ts": "^3.1.1",
     "viem": "^2.25.0",
-    "wagmi": "^2.14.16"
+    "wagmi": "^2.14.16",
+    "mongodb": "^6.12.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

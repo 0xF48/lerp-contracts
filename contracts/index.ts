@@ -1,3 +1,5 @@
+import { ComputeClaimsData } from "./functions/computeClaims"
+
 export type PublicRealmConfig = {
 	id: string
 	stakeRealmId: number, //starts with 1, used for indicating the realm when staking
@@ -16,6 +18,16 @@ export type PublicRealmConfig = {
 		assets: any
 	}
 }
+
+// Define the structure of the document we're storing
+// Replicating relevant parts of ComputeClaimsData structure
+export interface ClaimsStateEntry {
+	_id: string; // Explicitly define _id as string
+	timestamp: Date;
+	claimsData: ComputeClaimsData
+	config: PublicConfig
+}
+
 
 export type PublicConfig = {
 	realms: PublicRealmConfig[]
