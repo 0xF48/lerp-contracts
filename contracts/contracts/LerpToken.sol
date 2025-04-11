@@ -31,8 +31,9 @@ contract LerpToken is ERC20, AccessControl {
     }
 
     // --- Sale Logic ---
-    uint256 public saleTokenPrice;
-    uint256 public saleAvailableTokens;
+    uint256 public saleTokenPrice = 0;
+    uint256 public saleAvailableTokens = 0;
+    uint256 public distributedTokens = 0;
     uint256 public saleEndTime;
 
     function startSale(
@@ -59,6 +60,7 @@ contract LerpToken is ERC20, AccessControl {
         require(msg.value >= totalPrice, "Insufficient funds sent");
 
         saleAvailableTokens -= amount;
+        distributedTokens += amount;
         _transfer(address(this), msg.sender, amount);
 
         uint256 refund = msg.value - totalPrice;

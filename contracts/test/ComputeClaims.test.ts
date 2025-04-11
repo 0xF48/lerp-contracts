@@ -1,4 +1,4 @@
-import { computeClaims } from '../functions/computeClaims'; // Changed to relative path
+import { computeClaims } from '../functions/computeTick'; // Changed to relative path
 import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicRealmConfig } from '../index';
 
 

@@ -1,6 +1,6 @@
 // contracts/functions/updateStakingDB.ts
 import { MongoClient, UpdateResult } from 'mongodb';
-import { computeClaims, ComputeClaimsData } from './computeClaims'; // Relative path
+import { computeClaims, ComputeClaimsData } from './computeTick'; // Relative path
 import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicConfig, ClaimsStateEntry } from '../index'; // Import config and address
 import { Address } from 'viem';
 import crypto from 'crypto'; // Import crypto module for hashing

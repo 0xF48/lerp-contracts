@@ -1,7 +1,8 @@
 import { createPublicClient, http, parseAbiItem, decodeEventLog, Address, Log, Hex, keccak256 as viemKeccak256, encodePacked } from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3';
-import { PublicRealmConfig } from '..';
+import { LERP_TOKEN_ABI, PublicRealmConfig } from '..';
+import { token } from '@/typechain-types/@openzeppelin/contracts';
 // Add .js extension for Node.js/ts-node compatibility (it will resolve to .ts)
 
 // Internal type for processing
@@ -40,6 +41,11 @@ interface StakerDetails {
 // Main result type, now with a single global root
 export interface ComputeClaimsData {
 	globalStakerMerkleRoot: Hex; // Single root for all stakes
+	tokenStats: {
+		totalStakedLFTApprox: number; // Stringified bigint
+		totalDistributedLFTApprox: number; // Stringified bigint
+		numberOfStakers: number
+	};
 	realms: { [realmId: number]: RealmStakingData };
 	allStakers: { [address: Address]: StakerDetails };
 	leafData?: AggregatedStakeInfo[]; // Optional: include raw leaf data for debugging/proof generation
@@ -116,6 +122,16 @@ export async function computeClaims(
 		};
 	}
 
+	const tokenStats = {
+		totalStakedLFTApprox: 0,
+		totalDistributedLFTApprox: 0,
+		numberOfStakers: 0,
+	}
+
+	let token_totalStakedLFTCount = BigInt(0)
+	let token_totalDistributedLFT = BigInt(0)
+	let token_numberOfStakers = 0
+
 	// Flatten aggregated data and populate result structures
 	for (const [realmId, realmMap] of aggregatedData.entries()) {
 		let totalStakedInRealm = BigInt(0);
@@ -132,6 +148,8 @@ export async function computeClaims(
 
 			// Prepare output data
 			totalStakedInRealm += data.totalStaked;
+			token_totalStakedLFTCount += data.totalStaked
+			token_numberOfStakers++;
 			const stakerOutputInfo: StakerInfoOutput = {
 				address,
 				totalStaked: data.totalStaked.toString(),
@@ -183,9 +201,34 @@ export async function computeClaims(
 		globalStakerMerkleRoot = bufToHex(tree.getRoot());
 	}
 
-	console.log("Staking data computation complete.");
+	console.log("Staking data aggregation complete.");
+
+	// --- Read Distributed Tokens from Contract ---
+	let distributedTokens = BigInt(0);
+	try {
+		console.log(`Reading distributedTokens from ${lerpTokenAddress}...`);
+		distributedTokens = await publicClient.readContract({
+			address: lerpTokenAddress,
+			abi: LERP_TOKEN_ABI, // Use the imported ABI
+			functionName: 'distributedTokens',
+		}) as bigint; // Assert type
+		console.log(`Distributed Tokens: ${distributedTokens.toString()}`);
+	} catch (error) {
+		console.error("Error reading distributedTokens from contract:", error);
+		// Decide how to handle - throw, or return 0? For now, log and continue with 0.
+	}
+
+
+	tokenStats.totalDistributedLFTApprox = Number((distributedTokens / BigInt(10e17)).toString())
+	tokenStats.totalStakedLFTApprox = Number((token_totalStakedLFTCount / BigInt(10e17)).toString())
+	tokenStats.numberOfStakers = token_numberOfStakers
+
+	console.log("computation complete.");
+
+
 
 	const finalResult: ComputeClaimsData = {
+		tokenStats: tokenStats,
 		globalStakerMerkleRoot,
 		realms: resultRealms,
 		allStakers: resultStakers,

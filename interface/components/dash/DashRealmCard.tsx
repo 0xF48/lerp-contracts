@@ -6,7 +6,7 @@ import { PANEL, STYLE } from '../../enums'; // Relative path
 import { usePanel } from '../../hooks/usePanel'; // Relative path
 import { NetworkChip } from '../util/NetworkChip'; // Relative path
 import Link from 'next/link';
-import { ArrowUpDownIcon, HandCoinsIcon } from 'lucide-react';
+import { ArrowUpDownIcon, ChartNoAxesColumnIncreasingIcon, HandCoinsIcon } from 'lucide-react';
 import { RealmBanner } from '../util/RealmBanner'; // Relative path
 import type { PublicRealmConfig } from '@lerp/config'; // Import type from correct location
 
@@ -53,18 +53,26 @@ export function DashRealmCard({ config }: { config: PublicRealmConfig }) {
 
 			{/* Buttons Section */}
 			<div className="flex gap-4 mt-4">
-				<Link href={`/realm/${config.id}`} className={cn(STYLE.STONE_BUTTON, 'flex-1 justify-center px-4')}>Details</Link>
 				<button
 					// Pass only stakeRealmId
 					onClick={() => navToPanel(PANEL.STAKE, { realmId: config.stakeRealmId.toString() })}
-					className={cn(STYLE.YELLOW_BUTTON, 'flex justify-center items-center')}>
+					className={cn(STYLE.YELLOW_BUTTON, 'flex justify-center items-center gap-2')}>
+
 					<ArrowUpDownIcon className={STYLE.BUTTON_ICON} />
+					Stake
 				</button>
+				<Link
+					href={`/realm/${config.id}`} className={cn(STYLE.STONE_BUTTON, 'flex-1 justify-center px-4 gap-2')}>
+					<ChartNoAxesColumnIncreasingIcon className={STYLE.BUTTON_ICON} />
+					Stats
+				</Link>
 				<button
 					// Pass only stakeRealmId
 					onClick={() => navToPanel(PANEL.CLAIM, { realmId: config.stakeRealmId.toString() })}
-					className={cn(STYLE.GREEN_BUTTON, 'flex justify-center items-center')}>
+					className={cn(STYLE.GREEN_BUTTON, 'flex justify-center items-center gap-2')}>
+
 					<HandCoinsIcon className={STYLE.BUTTON_ICON + ' text-black'} />
+					Claim
 				</button>
 			</div>
 		</div>

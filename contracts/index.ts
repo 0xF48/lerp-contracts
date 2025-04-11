@@ -1,4 +1,4 @@
-import { ComputeClaimsData } from "./functions/computeClaims"
+import { ComputeClaimsData } from "./functions/computeTick"
 
 export type PublicRealmConfig = {
 	id: string
@@ -28,9 +28,12 @@ export interface ClaimsStateEntry {
 	config: PublicConfig
 }
 
-
 export type PublicConfig = {
 	realms: PublicRealmConfig[]
+	tokenInfo: {
+		totalSupply: number,
+		stakeLockDaysAmount: number
+	}
 }
 
 // THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
@@ -54,7 +57,11 @@ export const CONFIG: PublicConfig = {
 				"assets": []
 			}
 		}
-	]
+	],
+	tokenInfo: {
+		totalSupply: 42_000,
+		stakeLockDaysAmount: 28 * 3,
+	}
 }
 
 
@@ -589,6 +596,19 @@ export const LERP_TOKEN_ABI = [
 	{
 		"inputs": [],
 		"name": "saleAvailableTokens",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "distributedTokens",
 		"outputs": [
 			{
 				"internalType": "uint256",
