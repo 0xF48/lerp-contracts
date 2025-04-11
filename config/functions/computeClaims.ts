@@ -1,8 +1,8 @@
-import { createPublicClient, http, parseAbiItem, decodeEventLog, Abi, Address, Log, Hex, keccak256 as viemKeccak256, encodePacked } from 'viem';
+import { createPublicClient, http, parseAbiItem, decodeEventLog, Address, Log, Hex, keccak256 as viemKeccak256, encodePacked } from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3';
 // Add .js extension for Node.js/ts-node compatibility (it will resolve to .ts)
-import { LERP_TOKEN_CONTRACT_ADDRESS, LERP_TOKEN_ABI, CONFIG, PublicRealmConfig } from '../index';
+import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicRealmConfig } from '../index';
 
 // Internal type for processing
 interface AggregatedStakeInfo {
