@@ -8,6 +8,7 @@ import { TapScaleWrapper } from "../util/TapScaleWrapper";
 import { useLerpToken } from '@/hooks/useLerpToken';
 import { formatUnits, parseUnits, isAddress } from 'viem';
 import { MinusIcon, PlusIcon } from 'lucide-react'; // Import icons
+import { formatDistanceToNow } from 'date-fns';
 
 const showButtonPosition = `
 	sticky z-20 left-0 bottom-10
@@ -218,6 +219,7 @@ export function BuyPanelButton() {
 	const saleEndTimePlaceholder = "10 days";
 	const {
 		salePricePerLft,
+		saleEndTime,
 		availableTokensForSale,
 	} = useLerpToken();
 
@@ -232,7 +234,7 @@ export function BuyPanelButton() {
 
 	return <TapScaleWrapper className={cn(showButtonPosition)} onTap={() => navToPanel(PANEL.BUY)}>
 		<div className={cn(saleButtonStyle)}>
-			<span className="text-blue-950">sale ends in <strong className="text-blue-950 font-bold text-lg">{saleEndTimePlaceholder}</strong></span>
+			<span className="text-white/80">sale ends in <strong className="text-white font-bold text-lg">{formatDistanceToNow(saleEndTime)}</strong></span>
 			<span className="font-bold text-lg">Buy Now</span>
 		</div>
 	</TapScaleWrapper>

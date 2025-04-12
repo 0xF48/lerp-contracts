@@ -75,15 +75,12 @@ export type PublicConfig = {
 	tokenInfo: {
 		block: string,
 		address: Address,
+		chain: number,
 		totalSupply: number,
 		stakeLockDaysAmount: number
 	}
 }
 
-
-// Address of the deployed LerpToken contract
-export const LERP_TOKEN_CONTRACT_ADDRESS = process.env.LERP_TOKEN_CONTRACT_ADDRESS as Address;
-export const LERP_TOKEN_CONTRACT_BLOCK = process.env.LERP_TOKEN_CONTRACT_BLOCK as string;
 
 // THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
 export const CONFIG: PublicConfig = {
@@ -110,8 +107,9 @@ export const CONFIG: PublicConfig = {
 		}
 	],
 	tokenInfo: {
-		address: LERP_TOKEN_CONTRACT_ADDRESS,
-		block: LERP_TOKEN_CONTRACT_BLOCK,
+		address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+		chain: 31337,
+		block: "0",
 		totalSupply: 42_000,
 		stakeLockDaysAmount: 28 * 3,
 	}

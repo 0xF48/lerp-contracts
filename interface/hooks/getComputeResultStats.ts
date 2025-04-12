@@ -27,7 +27,7 @@ export async function getComputeResultStats(): Promise<StatEntry[]> {
 			value_str: ClaimsPushHashResult ? new Date(ClaimsPushHashResult.timestamp).toString() : 'never'
 		},
 		{
-			name: 'Rewards Airdrop',
+			name: 'Claims Airdropped',
 			description: 'The last time eligible rewards were distributed via an airdrop. All claims must reach fixed amount before airdrop to conserve gas. You can still withdraw manually after hash has been updated.',
 			value_str: AirdropResult ? new Date(AirdropResult.timestamp).toString() : 'never'
 		}

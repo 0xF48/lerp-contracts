@@ -64,4 +64,6 @@ export const enum STYLE {
 	BORDER_DASHED_BOT_BLUE = 'border-long-dashed-b border-long-dashed-color-blue',
 
 	INPUT_FIELD = 'p-2 border border-gray-300 rounded-md w-full focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none',
+
+	LINK_BLACK_TEXT = 'underline hover:text-black'
 }

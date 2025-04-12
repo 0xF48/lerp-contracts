@@ -33,6 +33,7 @@ async function main() {
 		console.log("Initial sale started successfully.");
 		console.log(` - Amount: ${ethers.formatUnits(await lerpToken.saleAvailableTokens(), 18)} LFT`);
 		console.log(` - Price: ${ethers.formatEther(await lerpToken.saleTokenPrice())} ETH per LFT`);
+		console.log(` - End Time: ${await lerpToken.saleEndTime()}`);
 		console.log(` - Duration: ${formatDistanceToNow(new Date(Number(await lerpToken.saleEndTime())))} days`);
 	} catch (error) {
 		console.error("Failed to start initial sale:", error);

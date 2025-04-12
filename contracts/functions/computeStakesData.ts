@@ -30,6 +30,7 @@ interface RealmStakingData {
 // Data structure for each staker in the output
 interface StakerDetails {
 	address: Address;
+	totalStaked: string;
 	realms: {
 		[realmId: number]: {
 			totalStaked: string; // Stringified bigint
@@ -42,8 +43,8 @@ interface StakerDetails {
 export interface ComputeStakesDataEntry {
 	globalStakerMerkleRoot: Hex; // Single root for all stakes
 	tokenStats: {
-		totalStakedLFTApprox: number; // Stringified bigint
-		totalDistributedLFTApprox: number; // Stringified bigint
+		totalStaked: string; // Stringified bigint
+		totalDistributed: string; // Stringified bigint
 		numberOfStakers: number
 	};
 	realms: { [realmId: number]: RealmStakingData };
@@ -111,6 +112,9 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 	const flatStakerList: AggregatedStakeInfo[] = [];
 	const resultRealms: { [realmId: number]: RealmStakingData } = {};
 	const resultStakers: { [address: Address]: StakerDetails } = {};
+	const resultStakersTotalStakeCount: {
+		[address: Address]: bigint
+	} = {}
 
 	// Initialize resultRealms with all configured realms
 	for (const realmConfig of config.realms) {
@@ -122,13 +126,12 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 	}
 
 	const tokenStats = {
-		totalStakedLFTApprox: 0,
-		totalDistributedLFTApprox: 0,
+		totalStaked: '0',
+		totalDistributed: '0',
 		numberOfStakers: 0,
 	}
 
-	let token_totalStakedLFTCount = BigInt(0)
-	let token_totalDistributedLFT = BigInt(0)
+	let token_totalStakedLFTCount = 0n
 	let token_numberOfStakers = 0
 
 	// Flatten aggregated data and populate result structures
@@ -158,12 +161,16 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 
 			// Update allStakers map
 			if (!resultStakers[address]) {
-				resultStakers[address] = { address, realms: {} };
+				resultStakers[address] = { address, realms: {}, totalStaked: '0' };
+				resultStakersTotalStakeCount[address] = BigInt(0)
 			}
 			resultStakers[address].realms[realmId] = {
 				totalStaked: data.totalStaked.toString(),
 				latestUnlockTime: Number(data.latestUnlockTime),
 			};
+			resultStakersTotalStakeCount[address] += data.totalStaked
+
+			resultStakers[address].totalStaked = (resultStakersTotalStakeCount[address]).toString()
 		}
 
 		// Update realm data in results
@@ -218,8 +225,8 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 	}
 
 
-	tokenStats.totalDistributedLFTApprox = Number((distributedTokens / BigInt(10e17)).toString())
-	tokenStats.totalStakedLFTApprox = Number((token_totalStakedLFTCount / BigInt(10e17)).toString())
+	tokenStats.totalDistributed = distributedTokens.toString()
+	tokenStats.totalStaked = token_totalStakedLFTCount.toString()
 	tokenStats.numberOfStakers = token_numberOfStakers
 
 	console.log("computation complete.");

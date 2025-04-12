@@ -1,14 +1,15 @@
-import { TokenDistributionStat } from "./TokenDistributionStat";
-import { TokenTopHoldersStat } from "./TokenTopHoldersStat";
+
 import { LerpNetworkStat } from "./LerpNetworkStat";
 import { ComputeStats } from "./ComputeStats";
+import { LerpGlobalConfigInfoStats } from "./LerpGlobalConfigInfoStats";
+import { StakeComputeResultStats } from "./StakeComputeResultStats";
 
 
 export function DashGlobalStatSections() {
 	return <>
 		<LerpNetworkStat />
 		<ComputeStats />
-		<TokenDistributionStat />
-		<TokenTopHoldersStat />
+		<LerpGlobalConfigInfoStats />
+		<StakeComputeResultStats />
 	</>
 }

@@ -19,13 +19,6 @@ const DB_NAME = process.env.MONGO_DBNAME as string;
 
 
 
-// // --- Hardhat Local Config (Adjust if needed) ---
-// const LOCAL_RPC_URL = 'http://127.0.0.1:8545/';
-// // Use the address exported from index.ts, assuming it's kept up-to-date
-// const LOCAL_LERP_TOKEN_ADDRESS: Address = LERP_TOKEN_CONTRACT_ADDRESS;
-// const LOCAL_FROM_BLOCK = BigInt(0);
-
-
 
 
 // --- Main Function ---

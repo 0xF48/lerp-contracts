@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 // Use @root alias to import from config directory at the project root
-import { LERP_TOKEN_CONTRACT_ADDRESS, LERP_TOKEN_ABI } from '@lerp/contracts';
+import { CONFIG, LERP_TOKEN_ABI } from '@lerp/contracts';
 import { parseUnits, formatUnits, parseEther, zeroAddress, Address, maxUint256 } from 'viem';
 import { useErrorHandler } from '../contexts/ErrorHandlerContext'; // Relative path ok here
 
@@ -11,7 +11,7 @@ import { useErrorHandler } from '../contexts/ErrorHandlerContext'; // Relative p
 type StakingStatus = 'idle' | 'checking_allowance' | 'needs_approval' | 'approving' | 'ready_to_stake' | 'staking' | 'success' | 'error';
 
 export function useLerpToken() {
-	const { address: accountAddress, isConnected } = useAccount();
+	const { address: accountAddress, isConnected, chain, ...account } = useAccount();
 	const { setError, clearError } = useErrorHandler();
 
 	// --- Generic Write/Receipt Hooks ---
@@ -27,6 +27,10 @@ export function useLerpToken() {
 	const [stakingStatus, setStakingStatus] = useState<StakingStatus>('idle');
 	const [stakeAmount, setStakeAmount] = useState<bigint>(BigInt(0));
 	const [stakeRealmId, setStakeRealmId] = useState<number | null>(null);
+
+	const LERP_TOKEN_CONTRACT_ADDRESS = CONFIG.tokenInfo.address
+
+
 
 	// --- Read Contract Data ---
 	const { data: balanceData, refetch: refetchBalance, error: balanceError } = useReadContract({
@@ -49,17 +53,25 @@ export function useLerpToken() {
 		functionName: 'saleTokenPrice',
 		query: { enabled: isConnected },
 	});
+
+
 	const { data: availableTokensData, refetch: refetchAvailableTokens, error: availableTokensError } = useReadContract({
 		address: LERP_TOKEN_CONTRACT_ADDRESS,
 		abi: LERP_TOKEN_ABI,
 		functionName: 'saleAvailableTokens',
 		query: { enabled: isConnected },
 	});
+	const { data: saleEndTimeData, refetch: refetchSaleEndTime, error: saleEndTimeError } = useReadContract({
+		address: LERP_TOKEN_CONTRACT_ADDRESS,
+		abi: LERP_TOKEN_ABI,
+		functionName: 'saleEndTime',
+		query: { enabled: isConnected },
+	});
 
 	// --- Global Error Reporting for Reads ---
 	useEffect(() => { if (balanceError) setError(balanceError); }, [balanceError, setError]);
-	useEffect(() => { if (allowanceError) setError(allowanceError); }, [allowanceError, setError]);
 	useEffect(() => { if (salePriceError) setError(salePriceError); }, [salePriceError, setError]);
+	useEffect(() => { if (saleEndTimeError) setError(saleEndTimeError); }, [saleEndTimeError, setError]);
 	useEffect(() => { if (availableTokensError) setError(availableTokensError); }, [availableTokensError, setError]);
 
 	// --- Staking Flow Logic ---
@@ -110,6 +122,9 @@ export function useLerpToken() {
 			abi: LERP_TOKEN_ABI,
 			functionName: 'approve',
 			args: [LERP_TOKEN_CONTRACT_ADDRESS, maxUint256],
+			//@ts-ignore
+			chainId: chain.id,
+			...account,
 		});
 	}, [stakingStatus, stakeAmount, writeApprove, setError, clearError]);
 
@@ -129,6 +144,9 @@ export function useLerpToken() {
 			abi: LERP_TOKEN_ABI,
 			functionName: 'stakeTokensToRealm',
 			args: [stakeRealmId, stakeAmount],
+			//@ts-ignore
+			chainId: chain.id as any,
+			...account,
 		});
 	}, [stakingStatus, stakeAmount, stakeRealmId, writeStake, setError, clearError]);
 
@@ -163,6 +181,9 @@ export function useLerpToken() {
 				functionName: 'buyTokens',
 				args: [lftAmount],
 				value: costInWei,
+				//@ts-ignore
+				chainId: chain.id,
+				...account,
 			});
 		} catch (e) { setError(e); }
 	}, [salePriceData, isConnected, accountAddress, writeBuy, setError, clearError]);
@@ -182,8 +203,8 @@ export function useLerpToken() {
 	// --- Refetch All ---
 	const refetchAll = useCallback(() => {
 		refetchBalance();
-		refetchAllowance();
 		refetchSalePrice();
+		refetchSaleEndTime();
 		refetchAvailableTokens();
 	}, [refetchBalance, refetchAllowance, refetchSalePrice, refetchAvailableTokens]);
 
@@ -192,6 +213,7 @@ export function useLerpToken() {
 		userLftBalance: balance,
 		currentAllowance,
 		salePricePerLft: salePrice,
+		saleEndTime: saleEndTimeData ? new Date(Number(saleEndTimeData) * 1000) : null,
 		availableTokensForSale: availableTokens,
 		isConnected,
 		accountAddress,
@@ -217,8 +239,8 @@ export function useLerpToken() {
 
 		// Actions
 		refetchUserBalance: refetchBalance,
-		refetchAllowance: refetchAllowance,
 		refetchSalePrice: refetchSalePrice,
+		refetchSaleEndTime: refetchSaleEndTime,
 		refetchAvailableTokens: refetchAvailableTokens,
 		refetchAll,
 	};
