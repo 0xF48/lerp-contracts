@@ -1,12 +1,6 @@
-import { Address } from "viem";
-import { PublicConfig } from "..";
+import { ComputeResult } from "..";
 
-export async function computeRealmClaimsData(
-	rpcUrl: string,
-	config: PublicConfig,
-	options?: {
-
-	}
-) {
+export async function computeRealmClaimsData(): Promise<ClaimsComputeResult> {
 	// for each realm, we need to compute all transactions
+
 }

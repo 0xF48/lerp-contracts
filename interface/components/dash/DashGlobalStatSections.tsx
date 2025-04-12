@@ -1,13 +1,13 @@
 import { TokenDistributionStat } from "./TokenDistributionStat";
 import { TokenTopHoldersStat } from "./TokenTopHoldersStat";
 import { LerpNetworkStat } from "./LerpNetworkStat";
-import { TokenComputeStats } from "./TokenComputeStats";
+import { ComputeStats } from "./ComputeStats";
 
 
 export function DashGlobalStatSections() {
 	return <>
 		<LerpNetworkStat />
-		<TokenComputeStats />
+		<ComputeStats />
 		<TokenDistributionStat />
 		<TokenTopHoldersStat />
 	</>

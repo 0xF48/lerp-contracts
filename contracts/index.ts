@@ -1,5 +1,6 @@
-import { ComputeClaimsData } from "./functions/computeStakesData"
 import { Address } from 'viem'
+import { ComputeStakesDataEntry } from './functions/computeStakesData'
+import { computeChecksum } from './functions/computeChecksum'
 export type PublicRealmConfig = {
 	id: string
 	stakeRealmId: number, //starts with 1, used for indicating the realm when staking
@@ -19,30 +20,54 @@ export type PublicRealmConfig = {
 	}
 }
 
+export type ComputeResult = {
+	_id: string; // Explicitly define _id as string
+	configHash: string;
+	timestamp: Date;
+}
+
 
 // Define the structure of the document we're storing
 // Replicating relevant parts of ComputeClaimsData structure
-export interface ClaimsStateEntry {
-	_id: string; // Explicitly define _id as string
-	timestamp: Date;
-	stakesComputeResult: {
-		timestamp: Date,
-	}
-	claimsComputeResult: {
-		timestamp: Date,
-	}
-	claimsHashPushResult: {
-		timestamp: Date,
-	}
-	stakesHashPushResult: {
-		timestamp: Date,
-	}
-	airdropResult: {
-		timestamp: Date,
-	}
-	claimsData: ComputeClaimsData
-	config: PublicConfig
+export type StakesComputeResult = ComputeResult & {
+	data: ComputeStakesDataEntry;
 }
+
+export type StakesPushHashResult = ComputeResult & {
+	data: {
+
+	};
+}
+
+export type ClaimsComputeResult = ComputeResult & {
+	data: {
+
+	}
+}
+
+export type ClaimsPushHashResult = ComputeResult & {
+	data: {
+
+	}
+}
+
+export type AirdropResult = ComputeResult & {
+	data: {
+
+	}
+}
+
+export enum COMPUTE_COLLECTIONS {
+	ClaimsPushHashResult = "ClaimsPushHashResult",
+	StakesPushHashResult = "StakesPushHashResult",
+	ClaimsComputeResult = "ClaimsComputeResult",
+	StakesComputeResult = "StakesComputeResult",
+	AirdropResult = "AirdropResult"
+}
+
+
+
+
 
 export type PublicConfig = {
 	lerpTokenAddress: Address,
@@ -89,6 +114,8 @@ export const CONFIG: PublicConfig = {
 	}
 }
 
+
+export const CONFIG_HASH = computeChecksum(CONFIG)
 
 
 

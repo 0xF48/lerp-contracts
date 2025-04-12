@@ -1,7 +1,7 @@
 // contracts/functions/updateStakingDB.ts
 import { MongoClient, UpdateResult } from 'mongodb';
-import { computeStakesData, ComputeClaimsData } from './computeStakesData'; // Relative path
-import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicConfig, ClaimsStateEntry } from '../index'; // Import config and address
+import { computeStakesData } from './computeStakesData'; // Relative path
+import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicConfig, StakesComputeResult, CONFIG_HASH, COMPUTE_COLLECTIONS } from '../index'; // Import config and address
 import { Address } from 'viem';
 import crypto from 'crypto'; // Import crypto module for hashing
 import dotenv from 'dotenv'
@@ -13,16 +13,17 @@ dotenv.config({
 // --- Configuration ---
 const MONGODB_URI = process.env.MONGO_URI as string;
 const DB_NAME = process.env.MONGO_DBNAME as string;
-const COLLECTION_NAME = 'claimsData';
 
 
 
 
-// --- Hardhat Local Config (Adjust if needed) ---
-const LOCAL_RPC_URL = 'http://127.0.0.1:8545/';
-// Use the address exported from index.ts, assuming it's kept up-to-date
-const LOCAL_LERP_TOKEN_ADDRESS: Address = LERP_TOKEN_CONTRACT_ADDRESS;
-const LOCAL_FROM_BLOCK = BigInt(0);
+
+// // --- Hardhat Local Config (Adjust if needed) ---
+// const LOCAL_RPC_URL = 'http://127.0.0.1:8545/';
+// // Use the address exported from index.ts, assuming it's kept up-to-date
+// const LOCAL_LERP_TOKEN_ADDRESS: Address = LERP_TOKEN_CONTRACT_ADDRESS;
+// const LOCAL_FROM_BLOCK = BigInt(0);
+
 
 
 // compute the checksum
@@ -35,33 +36,26 @@ function computeChecksum(jsonObject: any): string {
 }
 
 // --- Main Function ---
-async function updateStakesData() {
+export async function saveStakesData({ client }: { client: MongoClient }) {
 	console.log('Starting database update...');
-	const client = new MongoClient(MONGODB_URI);
+	// const client = new MongoClient(MONGODB_URI);
 
 	try {
 		// 1. Compute latest staking data
-		console.log(`Computing staking data from ${LOCAL_RPC_URL}...`);
-		const claimsData = await computeStakesData(
-			LOCAL_RPC_URL,
-			CONFIG, // Use the imported static config
-			LERP_TOKEN_CONTRACT_BLOCK,
-			{ includeLeafData: false } // Exclude raw leaf data from DB doc
-		);
+		console.log(`Computing staking data from ${process.env.RPC_URL}...`);
+		const stakeData = await computeStakesData();
 		console.log('Staking data computed successfully.');
-		console.log('Merkle Root:', claimsData.globalStakerMerkleRoot);
+		console.log('Merkle Root:', stakeData.globalStakerMerkleRoot);
 
-
-
-		const _id = computeChecksum([claimsData, CONFIG])
+		const _id = computeChecksum(stakeData)
 
 		// 2. Connect to MongoDB
 		console.log(`Connecting to MongoDB at ${MONGODB_URI}...`);
-		await client.connect();
+
 		const db = client.db(DB_NAME);
 		// Get a typed collection reference
-		const collection = db.collection<ClaimsStateEntry>(COLLECTION_NAME);
-		console.log(`Connected to database '${DB_NAME}', collection '${COLLECTION_NAME}'.`);
+		const collection = db.collection<StakesComputeResult>(COMPUTE_COLLECTIONS.StakesComputeResult);
+		console.log(`Connected to database '${DB_NAME}', collection '${COMPUTE_COLLECTIONS.StakesComputeResult}'.`);
 
 		// Ensure an index exists on the timestamp field for efficient querying
 		console.log("Ensuring index on 'timestamp' field...");
@@ -70,11 +64,11 @@ async function updateStakesData() {
 
 		// 3. Prepare the document to be saved
 		// Combine static config with dynamic staking data
-		const doc = {
+		const doc: StakesComputeResult = {
 			_id: _id, // Fixed ID for upsert
 			timestamp: new Date(),
-			claimsData: claimsData,
-			config: CONFIG
+			data: stakeData,
+			configHash: CONFIG_HASH
 		};
 
 		// 4. Upsert the document into the collection

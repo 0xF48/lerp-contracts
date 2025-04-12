@@ -1,7 +1,7 @@
 import { createPublicClient, http, parseAbiItem, decodeEventLog, Address, Log, Hex, keccak256 as viemKeccak256, encodePacked } from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3';
-import { LERP_TOKEN_ABI, PublicConfig, PublicRealmConfig } from '..';
+import { CONFIG, LERP_TOKEN_ABI, PublicConfig, PublicRealmConfig } from '..';
 import { token } from '@/typechain-types/@openzeppelin/contracts';
 // Add .js extension for Node.js/ts-node compatibility (it will resolve to .ts)
 
@@ -39,7 +39,7 @@ interface StakerDetails {
 }
 
 // Main result type, now with a single global root
-export interface ComputeClaimsData {
+export interface ComputeStakesDataEntry {
 	globalStakerMerkleRoot: Hex; // Single root for all stakes
 	tokenStats: {
 		totalStakedLFTApprox: number; // Stringified bigint
@@ -55,12 +55,11 @@ export interface ComputeClaimsData {
 const bufToHex = (b: Buffer): Hex => `0x${b.toString('hex')}`;
 
 // --- Main Function ---
-export async function computeStakesData(
-	rpcUrl: string,
-	config: PublicConfig,
-	options?: { includeLeafData?: boolean } // Option to include raw leaf data in output
-): Promise<ComputeClaimsData> {
+export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 
+	const config = CONFIG
+
+	const rpcUrl = process.env.RPC_URL
 	const fromBlock = BigInt(config.lerpTokenContractBlock)
 	const lerpTokenAddress = config.lerpTokenAddress
 
@@ -227,17 +226,19 @@ export async function computeStakesData(
 
 
 
-	const finalResult: ComputeClaimsData = {
+	const finalResult: ComputeStakesDataEntry = {
 		tokenStats: tokenStats,
 		globalStakerMerkleRoot,
 		realms: resultRealms,
 		allStakers: resultStakers,
 	};
 
-	// Optionally include raw leaf data for debugging/proof generation client-side
-	if (options?.includeLeafData) {
-		finalResult.leafData = flatStakerList;
-	}
+	// // Optionally include raw leaf data for debugging/proof generation client-side
+	// if (options?.includeLeafData) {
+	// 	finalResult.leafData = flatStakerList;
+	// }
+
+	finalResult.leafData = flatStakerList;
 
 	return finalResult;
 }
