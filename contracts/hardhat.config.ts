@@ -10,12 +10,12 @@ dotenv.config({
 });
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
-console.log(process.env.PRIVATE_KEY)
 
-// Validate PRIVATE_KEY format if it exists (basic check)
-if (PRIVATE_KEY && !/^0x[a-fA-F0-9]{64}$/.test(PRIVATE_KEY)) {
-  console.warn("Warning: PRIVATE_KEY in .env file appears invalid. Ensure it's a 64-character hex string prefixed with 0x.");
-}
+
+// // Validate PRIVATE_KEY format if it exists (basic check)
+// if (PRIVATE_KEY && !/^0x[a-fA-F0-9]{64}$/.test(PRIVATE_KEY)) {
+//   throw new Error("PRIVATE_KEY in .env file appears invalid. Ensure it's a 64-character hex string prefixed with 0x.");
+// }
 
 // Optional: Keep the check or remove if relying on conditional accounts array
 // if (process.env.HARDHAT_NETWORK && process.env.HARDHAT_NETWORK !== 'hardhat') {

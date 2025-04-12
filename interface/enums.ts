@@ -11,6 +11,12 @@ export const enum PANEL {
 	UNSTAKE = "unstake",
 }
 
+export type StatEntry = { // Added export
+	name: string,
+	value: number,
+	description?: string,
+	value_str: string
+}
 
 
 export const PANEL_TITLES = {

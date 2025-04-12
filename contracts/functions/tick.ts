@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import { saveStakesData } from './saveStakesData';
 
 const DB_URI = process.env.MONGO_URI as string

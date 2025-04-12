@@ -57,7 +57,7 @@ export type AirdropResult = ComputeResult & {
 	}
 }
 
-export enum COMPUTE_COLLECTIONS {
+export const enum COMPUTE_COLLECTIONS {
 	ClaimsPushHashResult = "ClaimsPushHashResult",
 	StakesPushHashResult = "StakesPushHashResult",
 	ClaimsComputeResult = "ClaimsComputeResult",

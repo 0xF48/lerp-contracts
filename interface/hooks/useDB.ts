@@ -11,11 +11,11 @@ client.connect();
 
 const db = client.db(DB_NAME)
 const collections = {
-	claimsComputeResult: db.collection<ClaimsComputeResult>(COMPUTE_COLLECTIONS.ClaimsComputeResult),
-	claimsHashPushResult: db.collection<ClaimsPushHashResult>(COMPUTE_COLLECTIONS.ClaimsPushHashResult),
-	stakesComputeResult: db.collection<StakesComputeResult>(COMPUTE_COLLECTIONS.StakesComputeResult),
-	stakesHashPushResult: db.collection<StakesPushHashResult>(COMPUTE_COLLECTIONS.StakesPushHashResult),
-	airdropResult: db.collection<AirdropResult>(COMPUTE_COLLECTIONS.AirdropResult)
+	[COMPUTE_COLLECTIONS.ClaimsComputeResult]: db.collection<ClaimsComputeResult>(COMPUTE_COLLECTIONS.ClaimsComputeResult),
+	[COMPUTE_COLLECTIONS.ClaimsPushHashResult]: db.collection<ClaimsPushHashResult>(COMPUTE_COLLECTIONS.ClaimsPushHashResult),
+	[COMPUTE_COLLECTIONS.StakesComputeResult]: db.collection<StakesComputeResult>(COMPUTE_COLLECTIONS.StakesComputeResult),
+	[COMPUTE_COLLECTIONS.StakesPushHashResult]: db.collection<StakesPushHashResult>(COMPUTE_COLLECTIONS.StakesPushHashResult),
+	[COMPUTE_COLLECTIONS.AirdropResult]: db.collection<AirdropResult>(COMPUTE_COLLECTIONS.AirdropResult)
 }
 
 export function useDB() {
