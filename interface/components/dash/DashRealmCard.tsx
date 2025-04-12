@@ -8,7 +8,7 @@ import { NetworkChip } from '../util/NetworkChip'; // Relative path
 import Link from 'next/link';
 import { ArrowUpDownIcon, ChartNoAxesColumnIncreasingIcon, HandCoinsIcon } from 'lucide-react';
 import { RealmBanner } from '../util/RealmBanner'; // Relative path
-import type { PublicRealmConfig } from '@lerp/config'; // Import type from correct location
+import type { PublicRealmConfig } from '@lerp/contracts'; // Import type from correct location
 
 export function DashRealmCard({ config }: { config: PublicRealmConfig }) {
 	const { navToPanel } = usePanel();

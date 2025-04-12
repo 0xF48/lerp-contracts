@@ -1,4 +1,4 @@
-import { computeClaims } from '../functions/computeTick'; // Changed to relative path
+import { computeClaimsData } from '../functions/computeClaimsData'; // Changed to relative path
 import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicRealmConfig } from '../index';
 
 
@@ -9,7 +9,7 @@ async function ComputeClaims() {
 	const configData = CONFIG;
 
 	try {
-		const stakingData = await computeClaims(rpc, configData, tokenAddr, undefined, { includeLeafData: true });
+		const stakingData = await computeClaimsData(rpc, configData, tokenAddr, undefined, { includeLeafData: true });
 		console.log(JSON.stringify(stakingData, (key, value) =>
 			typeof value === 'bigint' ? value.toString() : value, 2)); // Pretty print with bigint handling
 	} catch (e) {

@@ -1,5 +1,5 @@
-import { ComputeClaimsData } from "./functions/computeTick"
-
+import { ComputeClaimsData } from "./functions/computeStakesData"
+import { Address } from 'viem'
 export type PublicRealmConfig = {
 	id: string
 	stakeRealmId: number, //starts with 1, used for indicating the realm when staking
@@ -19,16 +19,34 @@ export type PublicRealmConfig = {
 	}
 }
 
+
 // Define the structure of the document we're storing
 // Replicating relevant parts of ComputeClaimsData structure
 export interface ClaimsStateEntry {
 	_id: string; // Explicitly define _id as string
 	timestamp: Date;
+	stakesComputeResult: {
+		timestamp: Date,
+	}
+	claimsComputeResult: {
+		timestamp: Date,
+	}
+	claimsHashPushResult: {
+		timestamp: Date,
+	}
+	stakesHashPushResult: {
+		timestamp: Date,
+	}
+	airdropResult: {
+		timestamp: Date,
+	}
 	claimsData: ComputeClaimsData
 	config: PublicConfig
 }
 
 export type PublicConfig = {
+	lerpTokenAddress: Address,
+	lerpTokenContractBlock: string,
 	realms: PublicRealmConfig[]
 	tokenInfo: {
 		totalSupply: number,
@@ -36,8 +54,15 @@ export type PublicConfig = {
 	}
 }
 
+
+// Address of the deployed LerpToken contract
+export const LERP_TOKEN_CONTRACT_ADDRESS = process.env.LERP_TOKEN_CONTRACT_ADDRESS as Address;
+export const LERP_TOKEN_CONTRACT_BLOCK = process.env.LERP_TOKEN_CONTRACT_BLOCK as string;
+
 // THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
 export const CONFIG: PublicConfig = {
+	lerpTokenAddress: LERP_TOKEN_CONTRACT_ADDRESS,
+	lerpTokenContractBlock: LERP_TOKEN_CONTRACT_BLOCK,
 	realms: [
 		{
 			stakeRealmId: 1,
@@ -65,9 +90,6 @@ export const CONFIG: PublicConfig = {
 }
 
 
-
-// Address of the deployed LerpToken contract
-export const LERP_TOKEN_CONTRACT_ADDRESS = '0x5fbdb2315678afecb367f032d93f642f64180aa3';
 
 
 // ABI of the LerpToken contract

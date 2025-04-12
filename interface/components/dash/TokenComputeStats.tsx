@@ -1,4 +1,5 @@
 import { getPublicLerpStatus } from "@/hooks/getPublicLerpStatus";
+import { getTokenComputeStats } from "@/hooks/getTokenComputeStats";
 
 function StatEntry({ label, children }: { label: string, children: any }) {
 	return (
@@ -10,19 +11,12 @@ function StatEntry({ label, children }: { label: string, children: any }) {
 }
 
 export async function TokenComputeStats() {
-	const { error, status } = await getPublicLerpStatus();
-
-	return <div className="w-full flex flex-col gap-4" >
-		<div className="w-full items-start text-gray-400" >
-			<div>Lerp Network </div>
-		</div>
-		{error && status && <div className="bg-red-500 text-white rounded-xl p-4">FAILED TO CONNECT TO LERP API, USING CACHE, {error.message}</div>}
-		{error && !status && <div className="bg-red-500 text-white rounded-xl p-4">FAILED TO CONNECT TO LERP API, {error.message}</div>}
-		{/* <SquareChart data={chartData} selectIndex={selectIndex} /> */}
-		{!error && status && <div className="flex flex-col px-4" >
-			<StatEntry label="Nodes Online" >
-				0
+	const stats = await getTokenComputeStats()
+	return <>
+		{stats.map((entry) => {
+			<StatEntry key={entry.name} label={entry.name}>
+				{entry.value_str}
 			</StatEntry>
-		</div>}
-	</div>
+		})}
+	</>
 }

@@ -1,6 +1,6 @@
 // contracts/functions/updateStakingDB.ts
 import { MongoClient, UpdateResult } from 'mongodb';
-import { computeClaims, ComputeClaimsData } from './computeTick'; // Relative path
+import { computeStakesData, ComputeClaimsData } from './computeStakesData'; // Relative path
 import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicConfig, ClaimsStateEntry } from '../index'; // Import config and address
 import { Address } from 'viem';
 import crypto from 'crypto'; // Import crypto module for hashing
@@ -35,18 +35,17 @@ function computeChecksum(jsonObject: any): string {
 }
 
 // --- Main Function ---
-async function updateClaims() {
+async function updateStakesData() {
 	console.log('Starting database update...');
 	const client = new MongoClient(MONGODB_URI);
 
 	try {
 		// 1. Compute latest staking data
 		console.log(`Computing staking data from ${LOCAL_RPC_URL}...`);
-		const claimsData = await computeClaims(
+		const claimsData = await computeStakesData(
 			LOCAL_RPC_URL,
 			CONFIG, // Use the imported static config
-			LOCAL_LERP_TOKEN_ADDRESS,
-			LOCAL_FROM_BLOCK,
+			LERP_TOKEN_CONTRACT_BLOCK,
 			{ includeLeafData: false } // Exclude raw leaf data from DB doc
 		);
 		console.log('Staking data computed successfully.');
@@ -104,14 +103,3 @@ async function updateClaims() {
 	}
 }
 
-// --- Run the script ---
-updateClaims()
-	.then(() => {
-		console.log('Database update script finished successfully.');
-		process.exit(0);
-	})
-	.catch((error) => {
-		// Catch any unhandled errors from the async function itself
-		console.error('Unhandled error during script execution:', error);
-		process.exit(1);
-	});

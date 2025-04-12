@@ -51,8 +51,6 @@ export async function DashRealmsList() {
 				Realms:
 				<span className='font-bold text-black'>{config.realms.length}</span>
 			</div>
-
-			{/* Render the array of Link-wrapped cards */}
 			{config.realms.map((realm: any) => <DashRealmCard key={realm.id} config={realm} />)}
 		</div>
 	);
