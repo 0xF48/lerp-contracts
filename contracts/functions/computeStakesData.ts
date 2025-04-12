@@ -60,8 +60,8 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 	const config = CONFIG
 
 	const rpcUrl = process.env.RPC_URL
-	const fromBlock = BigInt(config.lerpTokenContractBlock)
-	const lerpTokenAddress = config.lerpTokenAddress
+	const fromBlock = BigInt(config.tokenInfo.block)
+	const lerpTokenAddress = config.tokenInfo.address
 
 	const publicClient = createPublicClient({ transport: http(rpcUrl) });
 	const stakeEventAbiItem = 'event TokensStaked(address indexed user, uint16 indexed realmId, uint256 amount, uint256 unlockTime)';
@@ -70,7 +70,7 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 	let logs: Log[] = [];
 	try {
 		logs = await publicClient.getLogs({
-			address: config.lerpTokenAddress,
+			address: config.tokenInfo.address,
 			event: parseAbiItem(stakeEventAbiItem),
 			fromBlock: fromBlock ?? BigInt(0),
 			toBlock: 'latest',

@@ -14,15 +14,20 @@ const showButtonPosition = `
 	max-w-[30em] w-[90%] mt-10
 `
 
-const showButtonStyle = `
-	bg-blue-500 text-white p-6 rounded-2xl /* Removed opacity */
-	justify-between
-	flex flex-row items-center
-	items-center
-	justify-between
-	px-10
-	cursor-pointer
+const saleEndedButtonPosition = `
+	max-w-[30em] w-[90%] mt-10
 `
+
+const saleButtonStyle = `
+	bg-blue-500 text-white p-6 rounded-2xl
+	justify-between flex flex-row items-center px-10 cursor-pointer
+`
+const saleEndedButtonStyle = `
+	bg-gray-500 text-white p-6 rounded-2xl
+	justify-between flex flex-row items-center justify-center px-10 cursor-pointer
+`
+
+
 
 
 export function BuyPanelContent() {
@@ -211,9 +216,22 @@ export function BuyPanelContent() {
 export function BuyPanelButton() {
 	const { navToPanel } = usePanel();
 	const saleEndTimePlaceholder = "10 days";
+	const {
+		salePricePerLft,
+		availableTokensForSale,
+	} = useLerpToken();
+
+
+	if (availableTokensForSale === 'N/A') {
+		return <TapScaleWrapper className={cn(saleEndedButtonPosition)} >
+			<div className={cn(saleEndedButtonStyle)}>
+				token sale has not yet started
+			</div>
+		</TapScaleWrapper>
+	}
 
 	return <TapScaleWrapper className={cn(showButtonPosition)} onTap={() => navToPanel(PANEL.BUY)}>
-		<div className={cn(showButtonStyle)}>
+		<div className={cn(saleButtonStyle)}>
 			<span className="text-blue-950">sale ends in <strong className="text-blue-950 font-bold text-lg">{saleEndTimePlaceholder}</strong></span>
 			<span className="font-bold text-lg">Buy Now</span>
 		</div>

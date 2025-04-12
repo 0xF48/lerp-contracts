@@ -13,7 +13,7 @@ export const enum PANEL {
 
 export type StatEntry = { // Added export
 	name: string,
-	value: number,
+	value?: number,
 	description?: string,
 	value_str: string
 }

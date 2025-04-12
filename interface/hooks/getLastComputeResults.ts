@@ -1,5 +1,4 @@
 import { AirdropResult, ClaimsComputeResult, ClaimsPushHashResult, COMPUTE_COLLECTIONS, StakesComputeResult, StakesPushHashResult } from "@lerp/contracts"
-import { useDB } from "./useDB"
 import { getLastComputeResult } from "./getLastComputeResult"
 
 

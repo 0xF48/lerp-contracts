@@ -1,10 +1,11 @@
 // contracts/functions/updateStakingDB.ts
 import { MongoClient, UpdateResult } from 'mongodb';
 import { computeStakesData } from './computeStakesData'; // Relative path
-import { LERP_TOKEN_CONTRACT_ADDRESS, CONFIG, PublicConfig, StakesComputeResult, CONFIG_HASH, COMPUTE_COLLECTIONS } from '../index'; // Import config and address
+import { StakesComputeResult, COMPUTE_COLLECTIONS, CONFIG_CHECKSUM } from '../index'; // Import config and address
 import { Address } from 'viem';
 import crypto from 'crypto'; // Import crypto module for hashing
 import dotenv from 'dotenv'
+import { computeChecksum } from './computeChecksum';
 
 dotenv.config({
 	path: ".env", // Ensure this points to your .env file in the contracts directory
@@ -26,14 +27,6 @@ const DB_NAME = process.env.MONGO_DBNAME as string;
 
 
 
-// compute the checksum
-function computeChecksum(jsonObject: any): string {
-	// Ensure consistent ordering for deterministic hash
-	const jsonString = JSON.stringify(jsonObject, Object.keys(jsonObject).sort());
-	const hash = crypto.createHash('sha256');
-	hash.update(jsonString);
-	return hash.digest('hex');
-}
 
 // --- Main Function ---
 export async function saveStakesData({ client }: { client: MongoClient }) {
@@ -68,7 +61,7 @@ export async function saveStakesData({ client }: { client: MongoClient }) {
 			_id: _id, // Fixed ID for upsert
 			timestamp: new Date(),
 			data: stakeData,
-			configHash: CONFIG_HASH
+			configChecksum: CONFIG_CHECKSUM
 		};
 
 		// 4. Upsert the document into the collection

@@ -22,7 +22,7 @@ export type PublicRealmConfig = {
 
 export type ComputeResult = {
 	_id: string; // Explicitly define _id as string
-	configHash: string;
+	configChecksum: string;
 	timestamp: Date;
 }
 
@@ -70,10 +70,11 @@ export const enum COMPUTE_COLLECTIONS {
 
 
 export type PublicConfig = {
-	lerpTokenAddress: Address,
-	lerpTokenContractBlock: string,
+	checksum: string,
 	realms: PublicRealmConfig[]
 	tokenInfo: {
+		block: string,
+		address: Address,
 		totalSupply: number,
 		stakeLockDaysAmount: number
 	}
@@ -86,8 +87,8 @@ export const LERP_TOKEN_CONTRACT_BLOCK = process.env.LERP_TOKEN_CONTRACT_BLOCK a
 
 // THIS MUST BE SYNCED WITH LERP API AT ALL TIMES.
 export const CONFIG: PublicConfig = {
-	lerpTokenAddress: LERP_TOKEN_CONTRACT_ADDRESS,
-	lerpTokenContractBlock: LERP_TOKEN_CONTRACT_BLOCK,
+
+	checksum: '',
 	realms: [
 		{
 			stakeRealmId: 1,
@@ -109,14 +110,17 @@ export const CONFIG: PublicConfig = {
 		}
 	],
 	tokenInfo: {
+		address: LERP_TOKEN_CONTRACT_ADDRESS,
+		block: LERP_TOKEN_CONTRACT_BLOCK,
 		totalSupply: 42_000,
 		stakeLockDaysAmount: 28 * 3,
 	}
 }
 
 
-export const CONFIG_HASH = computeChecksum(CONFIG)
+export const CONFIG_CHECKSUM = computeChecksum(CONFIG)
 
+CONFIG.checksum = CONFIG_CHECKSUM
 
 
 // ABI of the LerpToken contract
@@ -401,6 +405,25 @@ export const LERP_TOKEN_ABI = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint16[]",
+				"name": "realmIds",
+				"type": "uint16[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "address[]",
+				"name": "users",
+				"type": "address[]"
+			}
+		],
+		"name": "WithdrawalFlagsReset",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "DEFAULT_ADMIN_ROLE",
 		"outputs": [
@@ -533,6 +556,19 @@ export const LERP_TOKEN_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "distributedTokens",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "bytes32",
@@ -594,6 +630,30 @@ export const LERP_TOKEN_ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"name": "hasWithdrawnStake",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "name",
 		"outputs": [
@@ -627,6 +687,24 @@ export const LERP_TOKEN_ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address[]",
+				"name": "users",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint16[]",
+				"name": "realmIds",
+				"type": "uint16[]"
+			}
+		],
+		"name": "resetWithdrawalFlags",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "bytes32",
 				"name": "role",
 				"type": "bytes32"
@@ -645,19 +723,6 @@ export const LERP_TOKEN_ABI = [
 	{
 		"inputs": [],
 		"name": "saleAvailableTokens",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "distributedTokens",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -697,22 +762,17 @@ export const LERP_TOKEN_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "setSaleAvailableTokens",
-				"type": "uint256"
+				"internalType": "uint16",
+				"name": "realmId",
+				"type": "uint16"
 			},
 			{
 				"internalType": "uint256",
-				"name": "setSaleTokenPrice",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "durationInSeconds",
+				"name": "amount",
 				"type": "uint256"
 			}
 		],
-		"name": "startSale",
+		"name": "stakeTokensToRealm",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -733,17 +793,22 @@ export const LERP_TOKEN_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint16",
-				"name": "realmId",
-				"type": "uint16"
+				"internalType": "uint256",
+				"name": "setSaleAvailableTokens",
+				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "setSaleTokenPrice",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "durationInSeconds",
 				"type": "uint256"
 			}
 		],
-		"name": "stakeTokensToRealm",
+		"name": "startSale",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -888,7 +953,12 @@ export const LERP_TOKEN_ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "withdrawAmount",
+				"name": "totalStakedAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "latestUnlockTime",
 				"type": "uint256"
 			},
 			{

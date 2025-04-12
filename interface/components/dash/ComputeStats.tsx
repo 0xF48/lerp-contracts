@@ -1,14 +1,16 @@
 import { getComputeResultStats } from "@/hooks/getComputeResultStats";
-import { StatEntry } from "./StatEntry";
+import { StatEntry, StatEntrySection } from "./StatEntry";
 
 
 export async function ComputeStats() {
 	const stats = await getComputeResultStats()
-	return <>
+	return <StatEntrySection label='Compute Timestamps'>
 		{stats.map((entry) => {
-			<StatEntry key={entry.name} label={entry.name}>
+			return <StatEntry key={entry.name} label={entry.name}>
 				{entry.value_str}
 			</StatEntry>
 		})}
-	</>
+	</StatEntrySection>
+
+
 }
