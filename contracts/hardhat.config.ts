@@ -3,7 +3,6 @@ import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-chai-matchers";
 import * as dotenv from "dotenv";
-import { ethers } from "ethers"; // Keep this if used elsewhere, otherwise can remove
 
 dotenv.config({
   path: ".env", // Ensure this points to your .env file in the contracts directory

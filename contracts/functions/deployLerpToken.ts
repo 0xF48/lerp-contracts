@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from "date-fns";
 import { ethers } from "hardhat"; // Corrected import
 
 async function main() {
@@ -25,12 +26,14 @@ async function main() {
 
 	console.log(`Starting initial sale with ${ethers.formatUnits(initialSaleAmount, 18)} LFT...`);
 	try {
+
+
 		const tx = await lerpToken.startSale(initialSaleAmount, initialSalePrice, saleDuration);
 		await tx.wait();
 		console.log("Initial sale started successfully.");
-		console.log(` - Amount: ${ethers.formatUnits(initialSaleAmount, 18)} LFT`);
-		console.log(` - Price: ${ethers.formatEther(initialSalePrice)} ETH per LFT`);
-		console.log(` - Duration: ${saleDuration / (60 * 60 * 24)} days`);
+		console.log(` - Amount: ${ethers.formatUnits(await lerpToken.saleAvailableTokens(), 18)} LFT`);
+		console.log(` - Price: ${ethers.formatEther(await lerpToken.saleTokenPrice())} ETH per LFT`);
+		console.log(` - Duration: ${formatDistanceToNow(new Date(Number(await lerpToken.saleEndTime())))} days`);
 	} catch (error) {
 		console.error("Failed to start initial sale:", error);
 	}
