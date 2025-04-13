@@ -1,80 +1,81 @@
-'use client';
-
 import React from 'react';
 import cn from 'classnames';
 import { PANEL, STYLE } from '../../enums'; // Relative path
 import { usePanel } from '../../hooks/usePanel'; // Relative path
 import { NetworkChip } from '../util/NetworkChip'; // Relative path
 import Link from 'next/link';
-import { ArrowUpDownIcon, ChartNoAxesColumnIncreasingIcon, HandCoinsIcon } from 'lucide-react';
-import { RealmBanner } from '../util/RealmBanner'; // Relative path
-import type { PublicRealmConfig } from '@lerp/contracts'; // Import type from correct location
+import { RealmBanner } from '../util/RealmBanner';
+import type { PublicRealmConfig } from '@lerp/contracts'; // Removed StakerDetails import
+import { useAccountStakeInfo } from '@/hooks/useAccountStakeInfo';
+import { useAccount } from 'wagmi';
+import { formatUnits, Address } from 'viem'; // Added Address type
+import { TapScaleWrapper } from '../util/TapScaleWrapper';
+import { RealmCardAccountInfoStats } from './realm/RealmCardAccountInfoStats';
+
+
 
 export function DashRealmCard({ config }: { config: PublicRealmConfig }) {
-	const { navToPanel } = usePanel();
 
-	// Placeholders
-	const releaseStatus = "DEV";
-	const userStakePercentage = "0.0%";
-	const profitCap = "60%";
+	// Determine currency symbol based on chain ID (simple example)
+	// TODO: Replace with a more robust method, potentially from config or a utility function
+	const getCurrencySymbol = (chainId: number) => {
+		switch (chainId) {
+			case 1: return "$ETH"; // Ethereum Mainnet
+			case 137: return "$MATIC"; // Polygon Mainnet
+			case 80001: return "$MATIC"; // Polygon Mumbai Testnet
+			// Add other chains as needed
+			default: return "$???";
+		}
+	};
+	const claimCurrencySymbol = getCurrencySymbol(config.contract.chain);
 
 	return (
-		<div className="w-full bg-stone-900 rounded-2xl flex flex-col gap-4 p-6 text-white font-mono">
-			{/* Top Section */}
-			<div className="flex flex-row justify-between items-center w-full">
-				<div className="uppercase text-yellow-400 font-bold text-lg">
-					{config.name}
-				</div>
-				{config.currentVersion && (
-					<div className="text-sm text-stone-400">
-						v{config.currentVersion}
+		<Link href={`/realm/${config.id}`} className="block w-full rounded-2xl overflow-hidden p-2"> {/* Link wrapper */}
+			<TapScaleWrapper className="block"> {/* TapScaleWrapper for hover effect */}
+				<div className="w-full bg-stone-800 flex flex-col gap-4 p-5 text-white font-mono"> {/* Original content div */}
+					{/* Top Section */}
+					<div className="flex flex-row justify-between items-center w-full">
+						{/* Adjusted styling */}
+						<div className="uppercase text-stone-100 font-medium text-lg tracking-wider">
+							{config.name}
+						</div>
+						{config.currentVersion && (
+							<div className="text-sm text-stone-400">
+								v{config.currentVersion}
+							</div>
+						)}
 					</div>
-				)}
-			</div>
 
-			{/* Banner */}
-			<RealmBanner config={config} />
+					{/* Banner */}
+					<RealmBanner realmId={config.id} />
 
-			{/* Info Section */}
-			<div className="flex flex-col gap-3 mt-2">
-				<div className={cn("flex justify-between items-center py-3", STYLE.BORDER_DASHED_BOT_STONE)}>
-					<span className="text-stone-400 text-sm">network:</span>
-					<NetworkChip chainId={config.contract.chain} />
+					{/* Info Section - Adjusted structure and styling */}
+					<div className="flex flex-col gap-2 mt-2"> {/* Reduced gap */}
+						{/* Network Row */}
+						<div className="flex justify-between items-center">
+							<span className="text-stone-400 text-sm">network:</span>
+							<NetworkChip chainId={config.contract.chain} />
+						</div>
+						{/* <RealmCardAccountInfoStats config={config} /> */}
+
+					</div>
+
+					{/* Details Button Section - Changed Link to div, added TapScaleWrapper */}
+					<div className="flex justify-center mt-6"> {/* Increased margin-top */}
+						<TapScaleWrapper className="block">
+							<div // Changed from Link to div
+								className={cn(
+									// STYLE.STONE_BUTTON, // Base styles if needed, but overriding bg
+									'bg-stone-600 hover:bg-stone-500 active:bg-stone-700', // Lighter button style
+									'px-10 py-2 rounded-lg text-sm text-white font-mono transition-colors duration-150' // Padding, text size, ensure text color
+								)}
+							>
+								Details
+							</div>
+						</TapScaleWrapper>
+					</div>
 				</div>
-				<div className={cn("flex justify-between items-center py-3", STYLE.BORDER_DASHED_BOT_STONE)}>
-					<span className="text-stone-400 text-sm">released:</span>
-					<span className="text-white font-bold">{releaseStatus}</span>
-				</div>
-				<div className={cn("flex justify-between items-center py-3", STYLE.BORDER_DASHED_BOT_STONE)}>
-					<span className="text-stone-400 text-sm">your stake:</span>
-					<span className="text-white font-bold">{userStakePercentage} <span className="text-stone-500 text-xs">/ {profitCap}</span></span>
-				</div>
-			</div>
-
-			{/* Buttons Section */}
-			<div className="flex gap-4 mt-4">
-				<button
-					// Pass only stakeRealmId
-					onClick={() => navToPanel(PANEL.STAKE, { realmId: config.stakeRealmId.toString() })}
-					className={cn(STYLE.YELLOW_BUTTON, 'flex justify-center items-center gap-2')}>
-
-					<ArrowUpDownIcon className={STYLE.BUTTON_ICON} />
-					Stake
-				</button>
-				<Link
-					href={`/realm/${config.id}`} className={cn(STYLE.STONE_BUTTON, 'flex-1 justify-center px-4 gap-2')}>
-					<ChartNoAxesColumnIncreasingIcon className={STYLE.BUTTON_ICON} />
-					Stats
-				</Link>
-				<button
-					// Pass only stakeRealmId
-					onClick={() => navToPanel(PANEL.CLAIM, { realmId: config.stakeRealmId.toString() })}
-					className={cn(STYLE.GREEN_BUTTON, 'flex justify-center items-center gap-2')}>
-
-					<HandCoinsIcon className={STYLE.BUTTON_ICON + ' text-black'} />
-					Claim
-				</button>
-			</div>
-		</div>
-	);
+			</TapScaleWrapper>
+		</Link>
+	); // End return
 }

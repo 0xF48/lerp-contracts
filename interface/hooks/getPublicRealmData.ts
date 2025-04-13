@@ -1,10 +1,11 @@
 import { real } from "viem/chains";
 import { getPublicLerpConfig } from "./getPublicLerpConfig";
 import { getPublicLerpStatus } from "./getPublicLerpStatus";
+import { PublicRealmConfig } from "@lerp/contracts";
 
 export async function getPublicRealmData(realmId: string): Promise<{
 	error: any | null
-	realmConfig: any | null
+	realmConfig: PublicRealmConfig | null
 	realmStatus: any | null
 }> {
 	const config = getPublicLerpConfig()

@@ -4,7 +4,7 @@ import Link from "next/link";
 import classNames from "classnames";
 import { STYLE } from "@/enums";
 import { COMPUTE_COLLECTIONS, CONFIG, StakesComputeResult } from "@lerp/contracts";
-import { firstAndLast } from "@/lib/firstAndLast";
+import { firstAndLast } from "@/components/util/firstAndLast";
 import { getLastComputeResult } from "@/hooks/getLastComputeResult";
 import { formatEther } from "viem";
 
