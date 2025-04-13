@@ -19,7 +19,7 @@ const truncateAddress = (address: string | undefined) => {
 export const AccountInfoSection: React.FC = () => {
 	const { address: accountAddress, isConnected } = useAccount();
 	const { userLftBalance } = useLerpToken();
-	const { isLoading, data } = useAccountStakeInfo<any>({ accountAddress });
+	const { isLoading, data } = useAccountStakeInfo({ accountAddress });
 
 
 	if (!isConnected) {
@@ -30,7 +30,7 @@ export const AccountInfoSection: React.FC = () => {
 	let stakedAmount = null
 
 	if (data && data.totalStaked) {
-		stakedAmount = formatEther(data.totalStaked)
+		stakedAmount = formatEther(BigInt(data.totalStaked))
 	} else {
 		stakedAmount = '-'
 	}

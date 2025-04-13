@@ -19,6 +19,7 @@ import { RealmStakeCard } from '@/components/dash/realm/RealmStakeCard';
 import { Footer } from '@/components/dash/Footer';
 import { RealmBackdrop } from '@/components/dash/realm/RealmBackdrop';
 import { RealmDetailsAccountContent } from '@/components/dash/realm/RealmDetailsAccountContent';
+import { StatEntry, StatEntrySection } from '@/components/dash/StatEntry';
 
 
 
@@ -82,8 +83,15 @@ export default async function RealmIdPage({ params }: { params: { realmId: strin
 				<div className={cn(STYLE.BORDER_DASHED_TOP, 'w-full flex flex-col md:flex-row justify-center')}>
 
 					<div className="w-full flex flex-col gap-10 p-8">
-						<RealmBanner realmId={realmId} />
-						<RealmStats realmId={realmId} />
+						<StatEntrySection label={'Realm Banner'}>
+							<RealmBanner realmId={realmId} />
+						</StatEntrySection>
+
+						<StatEntrySection label={'Realm Stats'}>
+							<StatEntry label="Version" >
+								{realmConfig.currentVersion}
+							</StatEntry>
+						</StatEntrySection>
 					</div>
 					<RealmDetailsAccountContent realmConfig={realmConfig} />
 				</div>
