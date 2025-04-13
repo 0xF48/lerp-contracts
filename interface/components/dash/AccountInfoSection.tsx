@@ -8,6 +8,7 @@ import { STYLE } from '@/enums';
 import { useAccountStakeInfo } from '@/hooks/useAccountStakeInfo';
 import { LoaderIcon } from 'lucide-react';
 import { formatEther } from 'viem';
+import { StatEntrySection } from './StatEntry';
 
 // Helper function to truncate address
 const truncateAddress = (address: string | undefined) => {
@@ -35,14 +36,16 @@ export const AccountInfoSection: React.FC = () => {
 	}
 
 	return (
-		<div className={cn("w-full flex flex-col gap-8 p-8", STYLE.BORDER_DASHED_BOT)}>
-			{/* Connected Account Label */}
-			<div className="text-gray-400 w-full justify-between flex flex-row">
-				Account:
-				<span className='font-bold text-black'>{truncateAddress(accountAddress)}</span>
-			</div>
+		<StatEntrySection
+			label={
+				<div className="text-gray-400 w-full justify-between flex flex-row">
 
-			{/* Blue Info Card */}
+					Account:
+					<span className='font-bold text-black'>{truncateAddress(accountAddress)}</span>
+				</div>
+			}
+
+		>
 			<div className="bg-blue-500 text-white rounded-xl p-8 w-full flex flex-col gap-4 h-[20em]">
 				{isLoading == true ? <div className='w-full h-full flex items-center justify-center'>
 					<LoaderIcon size={16} className="animate-spin" />
@@ -67,6 +70,7 @@ export const AccountInfoSection: React.FC = () => {
 				</>}
 
 			</div>
-		</div>
+
+		</StatEntrySection>
 	);
 };

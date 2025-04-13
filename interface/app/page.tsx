@@ -11,6 +11,7 @@ import { DashGlobalStatSections } from "@/components/dash/DashGlobalStatSections
 import { BuyPanelButton } from "@/components/panels/BuyPanel";
 import { TapScaleWrapper } from "@/components/util/TapScaleWrapper"; // Import the new wrapper
 import { AccountInfoSection } from "@/components/dash/AccountInfoSection";
+import { SaleInfoSection } from "@/components/dash/SaleInfoSection";
 
 
 export default function Dash() {
@@ -45,18 +46,14 @@ export default function Dash() {
         <div className="w-full flex flex-col gap-10 p-8">
           <DashGlobalStatSections />
         </div>
-        <div className={cn(STYLE.BORDER_DASHED_LEFT, 'w-full')}>
-
+        <div className={cn(STYLE.BORDER_DASHED_LEFT, 'flex flex-col w-full p-8 gap-10')}>
+          <SaleInfoSection />
           <AccountInfoSection />
+          <div className={STYLE.BORDER_DASHED_BOT + ' -mx-8'}></div>
           <DashNote />
           <DashRealmsList />
         </div>
       </div>
-
-      {/* Wrap BuyPanelButton with TapScaleWrapper inside Suspense */}
-      <Suspense fallback={<div>Loading...</div>}>
-        <BuyPanelButton />
-      </Suspense>
 
     </div>
     <div className="relative  text-black pt-20 min-h-[20em] flex flex-row justify-center">

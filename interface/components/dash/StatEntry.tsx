@@ -1,3 +1,5 @@
+import classNames from "classnames";
+
 export function StatEntry({ label, children }: { label: string, children: any }) {
 	return (
 		<div className="flex justify-between items-center">
@@ -7,8 +9,8 @@ export function StatEntry({ label, children }: { label: string, children: any })
 	);
 }
 
-export function StatEntrySection({ label, children }) {
-	return <div className="w-full flex flex-col gap-4" >
+export function StatEntrySection({ label, children, className }: { label: any, children: any, className?: string }) {
+	return <div className={classNames("w-full flex flex-col gap-4", className)} >
 		<div className="w-full items-start text-gray-400" >
 			<div>{label}</div>
 		</div>
@@ -16,5 +18,5 @@ export function StatEntrySection({ label, children }) {
 			{children}
 		</div>
 
-	</div>
+	</ div>
 }

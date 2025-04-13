@@ -7,8 +7,9 @@ import { PANEL, STYLE } from "@/enums";
 import { TapScaleWrapper } from "../util/TapScaleWrapper";
 import { useLerpToken } from '@/hooks/useLerpToken';
 import { formatUnits, parseUnits, isAddress } from 'viem';
-import { MinusIcon, PlusIcon } from 'lucide-react'; // Import icons
+import { BellIcon, MinusIcon, PlusIcon, ShoppingBasket } from 'lucide-react'; // Import icons
 import { formatDistanceToNow } from 'date-fns';
+import Link from 'next/link';
 
 const showButtonPosition = `
 	sticky z-20 left-0 bottom-10
@@ -214,6 +215,49 @@ export function BuyPanelContent() {
 }
 
 // Keep BuyPanelButton as is
+export function BuyPanelSectionCard() {
+	const { navToPanel } = usePanel();
+	const saleEndTimePlaceholder = "10 days";
+	const {
+		salePricePerLft,
+		saleEndTime,
+		availableTokensForSale,
+	} = useLerpToken();
+
+	let content
+	if (availableTokensForSale === 'N/A') {
+		content = <div className='w-full flex items-center flex-col'>
+			<div>
+				<div className='text-white text-xl mb-2'>sale not started</div>
+				<p className='text-blue-100'>tokens are distributed in batches.</p>
+			</div>
+			<div className='w-full items-center justify-end mt-10 flex-row flex'>
+				<Link href='/subscribe' className={STYLE.BLACK_BUTTON + ' w-fit items-center justify-center pr-7'}><BellIcon className='w-10'></BellIcon>Subscribe</Link>
+			</div>
+		</div>
+	} else {
+		content = <div className='w-full flex items-start flex-col'>
+			<div>
+				<div className='text-white text-xl mb-2'><span className='text-bold text-amber-400'>{availableTokensForSale}</span> available</div>
+				<p className='text-blue-100'>sale ends in <span className='text-white font-bold'>{formatDistanceToNow(saleEndTime)}</span></p>
+			</div>
+			<div className='w-full items-center justify-end mt-10 flex-row flex'>
+				<TapScaleWrapper onTap={() => navToPanel(PANEL.BUY)}>
+					<div className={STYLE.BLACK_BUTTON + ' w-fit items-center justify-center pr-7'}><ShoppingBasket className='w-10'></ShoppingBasket>Buy</div>
+				</TapScaleWrapper>
+			</div>
+		</div >
+	}
+
+
+
+	return <div className="bg-blue-500 text-white rounded-xl p-8 w-full flex flex-col gap-4 h-fit">
+		{content}
+
+
+	</div>
+}
+
 export function BuyPanelButton() {
 	const { navToPanel } = usePanel();
 	const saleEndTimePlaceholder = "10 days";
@@ -224,13 +268,7 @@ export function BuyPanelButton() {
 	} = useLerpToken();
 
 
-	if (availableTokensForSale === 'N/A') {
-		return <TapScaleWrapper className={cn(saleEndedButtonPosition)} >
-			<div className={cn(saleEndedButtonStyle)}>
-				token sale has not yet started
-			</div>
-		</TapScaleWrapper>
-	}
+
 
 	return <TapScaleWrapper className={cn(showButtonPosition)} onTap={() => navToPanel(PANEL.BUY)}>
 		<div className={cn(saleButtonStyle)}>

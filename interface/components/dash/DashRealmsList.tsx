@@ -2,6 +2,7 @@ import { DashRealmCard } from "./DashRealmCard";
 import classNames from "classnames";
 import { getPublicLerpConfig } from "@/hooks/getPublicLerpConfig";
 import Link from 'next/link'; // Import Link
+import { StatEntrySection } from "./StatEntry";
 
 // const TEST_DATA = [
 // 	{
@@ -43,15 +44,18 @@ export async function DashRealmsList() {
 	// 	</div>
 	// }
 
+	const label = <div className="text-gray-400 w-full justify-between flex flex-row font-mono"> {/* Added font-mono */}
+		Realms:
+		<span className='font-bold text-black'>{config.realms.length}</span>
+	</div>
 
 
 	return (
-		<div className={classNames('w-full flex flex-col gap-8 p-8')}>
-			<div className="text-gray-400 w-full justify-between flex flex-row font-mono"> {/* Added font-mono */}
-				Realms:
-				<span className='font-bold text-black'>{config.realms.length}</span>
+		<StatEntrySection label={label}>
+			<div className={classNames('w-full flex flex-col gap-8 ')}>
+				{config.realms.map((realm: any) => <DashRealmCard key={realm.id} config={realm} />)}
 			</div>
-			{config.realms.map((realm: any) => <DashRealmCard key={realm.id} config={realm} />)}
-		</div>
+		</StatEntrySection>
+
 	);
 }
