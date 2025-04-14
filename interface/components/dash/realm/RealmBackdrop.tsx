@@ -26,16 +26,16 @@ export async function RealmBackdrop({ realmId, className }: RealmBackdropProps) 
 	return (
 		<div
 			className={cn(
-				"absolute top-0 left-0 w-full max-h-[30rem] h-[50vh]", // Positioning and max height (using vh as fallback)
+				"absolute top-0 left-0 w-full max-h-[20rem] h-[50vh]", // Positioning and max height (using vh as fallback)
 				"bg-cover bg-center bg-no-repeat", // Background properties
-				"opacity-20 pointer-events-none z-0", // Appearance and layering (adjust opacity as needed)
+				"pointer-events-none -z-10", // Appearance and layering (adjust opacity as needed)
 				className // Merge additional classes
 			)}
 			style={{ backgroundImage: `url(${realmBackgroundImageUrl})` }} // Correct variable name
 			aria-hidden="true"
 		>
 			{/* Gradient Overlay - Fades to page background */}
-			<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--background)]"></div> {/* Added gradient */}
+			<div className="absolute inset-0 bg-gradient-to-b from-[var(--background)/10] to-[var(--background)]"></div> {/* Added gradient */}
 		</div>
 	);
 }

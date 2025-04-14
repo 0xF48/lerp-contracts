@@ -1,21 +1,13 @@
-import React, { Suspense } from 'react'; // Import React and Suspense
-import { ChevronLeftIcon } from "lucide-react"; // Added TestTubeIcon, ServerIcon
-import { NAV, PANEL, STYLE } from "@/enums";
-import AccountBalanceButton from "@/components/util/AccountBalanceButton"; // Keep for top right
+import React, { Suspense } from 'react';
+import { ChevronLeftIcon } from "lucide-react";
+import { NAV, STYLE } from "@/enums";
+import AccountBalanceButton from "@/components/util/AccountBalanceButton";
 import cn from "classnames";
 import Link from "next/link";
-import { usePanel } from "@/hooks/usePanel";
-import { useAccount } from 'wagmi'; // Import useAccount
-import { getAPIAssetPath } from '@/hooks/getAPIAssetPath'; // Import asset path helper
 import { AnimatedLerpLogo } from '@/components/util/AnimatedLerpLogo';
-import { getPublicRealmData } from '@/hooks/getPublicRealmData'; // Removed PublicRealmData type import
-// Removed RealmActions import as it's not used in the new layout
+import { getPublicRealmData } from '@/hooks/getPublicRealmData';
 import { RealmBanner } from '@/components/util/RealmBanner';
-import { NetworkChip } from '@/components/util/NetworkChip'; // Import NetworkChip
-import { formatUnits } from 'viem'; // For formatting stake
 import { NavBar } from '@/components/dash/NavBar';
-import { RealmStats } from '@/components/dash/realm/RealmStats';
-import { RealmStakeCard } from '@/components/dash/realm/RealmStakeCard';
 import { Footer } from '@/components/dash/Footer';
 import { RealmBackdrop } from '@/components/dash/realm/RealmBackdrop';
 import { RealmDetailsAccountContent } from '@/components/dash/realm/RealmDetailsAccountContent';

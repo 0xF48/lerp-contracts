@@ -28,12 +28,15 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: { // Configuration for the node started with `npx hardhat node`
       chainId: 31337,
-      accounts: PRIVATE_KEY
-        ? [{
-          privateKey: PRIVATE_KEY,
-          balance: "7777000000000000000000", // 7777 ETH in Wei as string
-        }]
-        : [], // Use default accounts if no private key is provided
+      // Configure multiple accounts for the hardhat network for testing
+      accounts: {
+        count: 10, // Specify the number of accounts needed for tests
+        // Optionally keep the specific private key if needed for certain tests,
+        // but ensure 'count' provides enough total accounts.
+        // If PRIVATE_KEY is set, it might override one of the 'count' accounts.
+        // Check Hardhat documentation for specifics if using both.
+        // For simplicity, relying on 'count' is often sufficient for testing.
+      },
     },
     localhost: { // Network for scripts/frontend to connect to the running node
       url: "http://127.0.0.1:8545",

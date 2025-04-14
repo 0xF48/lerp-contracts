@@ -83,6 +83,20 @@ contract LerpToken is ERC20, AccessControl {
         payable(msg.sender).transfer(amount);
     }
 
+    // --- Token Distribution (Admin) ---
+    function adminDistribute(
+        address to,
+        uint256 amount
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(to != address(0), "ERC20: transfer to the zero address");
+        uint256 contractBalance = balanceOf(address(this));
+        require(
+            contractBalance >= amount,
+            "ERC20: transfer amount exceeds contract balance"
+        );
+        _transfer(address(this), to, amount);
+    }
+
     // --- Staking Logic ---
     function stakeTokensToRealm(uint16 realmId, uint256 amount) external {
         require(amount > 0, "Cannot stake 0");

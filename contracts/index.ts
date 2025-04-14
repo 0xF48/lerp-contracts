@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import { Address, Hex } from 'viem' // Added Hex import
 import { ComputeStakesDataEntry } from './functions/computeStakesData'
 import { computeChecksum } from './functions/computeChecksum'
 export type PublicRealmConfig = {
@@ -33,9 +33,17 @@ export type StakesComputeResult = ComputeResult & {
 	data: ComputeStakesDataEntry;
 }
 
+// Result structure for pushing the stake Merkle hash
 export type StakesPushHashResult = ComputeResult & {
 	data: {
-
+		merkleRoot: Hex;
+		success: boolean;
+		transactionHash?: Hex;
+		blockNumber?: bigint;
+		gasUsed?: string; // Store as string for DB compatibility
+		effectiveGasPrice?: string; // Store as string
+		status?: 'success' | 'reverted' | 'skipped_duplicate'; // Include status
+		error?: string; // Store error message if any
 	};
 }
 
@@ -66,6 +74,7 @@ export const enum COMPUTE_COLLECTIONS {
 }
 
 
+export const DB_NAME = process.env.MONGO_DBNAME;
 
 
 
