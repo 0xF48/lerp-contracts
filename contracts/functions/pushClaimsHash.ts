@@ -94,12 +94,13 @@ export async function pushClaimsHashes(dbClient: MongoClient): Promise<PushClaim
 	console.log("Fetching latest computed claims data...");
 	const lastComputedClaims = await getLastDbResult<ClaimsComputeResult>(dbClient, COMPUTE_COLLECTIONS.ClaimsComputeResult);
 
-	if (!lastComputedClaims?.data?.realms) {
+
+	if (!lastComputedClaims) {
 		console.error("Could not find the last computed claims data in the database.");
 		return [{ success: false, error: 'Last computed claims data not found', realmId: 0, merkleRoot: '0x' }];
 	}
 
-	const computedRealms = lastComputedClaims.data.realms;
+	const computedRealms = lastComputedClaims.realms;
 	console.log(`Found computed claims for ${Object.keys(computedRealms).length} realms.`);
 
 	// Prepare clients (TODO: Handle multiple chains)

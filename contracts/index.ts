@@ -1,5 +1,4 @@
 import { Address, Hex } from 'viem' // Added Hex import
-import { ComputeStakesDataEntry } from './functions/computeStakesData'
 import { computeChecksum } from './functions/computeChecksum'
 export type PublicRealmConfig = {
 	id: string
@@ -33,6 +32,18 @@ export type StakesComputeResult = ComputeResult & {
 	data: ComputeStakesDataEntry;
 }
 
+// Structure for individual staker details (used within StakesComputeResult)
+export interface StakerDetails {
+	address: Address;
+	totalStaked: string; // Aggregated total LFT staked by this address across all realms
+	realms: {
+		[realmId: number]: {
+			totalStaked: string; // Stringified bigint for this specific realm
+			latestUnlockTime: number; // Unix timestamp
+		}
+	};
+}
+
 // Result structure for pushing the stake Merkle hash
 export type StakesPushHashResult = ComputeResult & {
 	data: {
@@ -60,11 +71,11 @@ export interface RealmClaimData {
 
 // Result structure for the overall claims computation job
 export type ClaimsComputeResult = ComputeResult & {
-	data: {
-		// Map realmId to its computed claim data
-		realms: { [realmId: number]: RealmClaimData };
-		// Optional: Add overall stats if needed
-	}
+
+	// Map realmId to its computed claim data
+	realms: { [realmId: number]: RealmClaimData };
+	// Optional: Add overall stats if needed
+
 }
 
 // Result structure for pushing a single realm's claim hash
@@ -99,6 +110,58 @@ export const enum COMPUTE_COLLECTIONS {
 
 
 export const DB_NAME = process.env.MONGO_DBNAME;
+
+
+// Keep existing type definitions below if they were here previously
+// Internal type for processing
+export interface AggregatedStakeInfo {
+	address: Address;
+	realmId: number; // Include realmId for the flat list
+	totalStaked: bigint;
+	latestUnlockTime: bigint; // Keep as bigint internally
+}
+
+// Type for JSON output staker details within a realm
+export interface StakerInfoOutput {
+	address: Address;
+	totalStaked: string; // Stringified bigint
+	latestUnlockTime: number; // Converted to number for JSON
+}
+
+// Data structure for each realm in the output (no Merkle root here)
+export interface RealmStakingData {
+	totalStakedLFT: string; // Stringified bigint
+	numberOfStakers: number;
+	stakers: StakerInfoOutput[];
+}
+
+// Data structure for each staker in the output
+export interface StakerDetails {
+	address: Address;
+	totalStaked: string;
+	realms: {
+		[realmId: number]: {
+			totalStaked: string; // Stringified bigint
+			latestUnlockTime: number;
+		}
+	};
+}
+
+// Main result type, now with a single global root
+export interface ComputeStakesDataEntry {
+	globalStakerMerkleRoot: Hex; // Single root for all stakes
+	tokenStats: {
+		totalStaked: string; // Stringified bigint
+		totalDistributed: string; // Stringified bigint
+		numberOfStakers: number
+	};
+	realms: { [realmId: number]: RealmStakingData };
+	allStakers: { [address: Address]: StakerDetails };
+	leafData?: AggregatedStakeInfo[]; // Optional: include raw leaf data for debugging/proof generation
+}
+
+
+
 
 
 

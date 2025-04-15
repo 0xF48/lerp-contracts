@@ -1,88 +1,82 @@
-import { createPublicClient, http, parseAbiItem, decodeEventLog, Address, Log, Hex, encodePacked } from 'viem';
+import {
+	createPublicClient,
+	http,
+	parseAbiItem,
+	decodeEventLog,
+	Address,
+	Log,
+	Hex,
+	encodePacked,
+	PublicClient,
+	formatUnits // Added for logging potentially
+} from 'viem';
 import { MerkleTree } from 'merkletreejs';
 import { keccak_256 as keccak256 } from '@noble/hashes/sha3';
-import { CONFIG, LERP_TOKEN_ABI } from '..';
+import { AggregatedStakeInfo, ComputeStakesDataEntry, CONFIG, LERP_TOKEN_ABI, PublicRealmConfig, RealmStakingData, StakerDetails, StakerInfoOutput } from '..';
 
+// --- Types ---
+// (Keep existing type definitions: AggregatedStakeInfo, StakerInfoOutput, RealmStakingData, StakerDetails, ComputeStakesDataEntry)
 
-// Internal type for processing
-interface AggregatedStakeInfo {
-	address: Address;
-	realmId: number; // Include realmId for the flat list
+// Internal type for processing logs
+interface AggregatedStakeData {
 	totalStaked: bigint;
-	latestUnlockTime: bigint; // Keep as bigint internally
+	latestUnlockTime: bigint;
 }
+type AggregatedDataMap = Map<number, Map<Address, AggregatedStakeData>>;
 
-// Type for JSON output staker details within a realm
-interface StakerInfoOutput {
-	address: Address;
-	totalStaked: string; // Stringified bigint
-	latestUnlockTime: number; // Converted to number for JSON
-}
-
-// Data structure for each realm in the output (no Merkle root here)
-interface RealmStakingData {
-	totalStakedLFT: string; // Stringified bigint
-	numberOfStakers: number;
-	stakers: StakerInfoOutput[];
-}
-
-// Data structure for each staker in the output
-interface StakerDetails {
-	address: Address;
-	totalStaked: string;
-	realms: {
-		[realmId: number]: {
-			totalStaked: string; // Stringified bigint
-			latestUnlockTime: number;
-		}
-	};
-}
-
-// Main result type, now with a single global root
-export interface ComputeStakesDataEntry {
-	globalStakerMerkleRoot: Hex; // Single root for all stakes
+// Internal type for processing aggregated data into final structures
+interface ProcessedStakeData {
+	flatStakerList: AggregatedStakeInfo[];
+	resultRealms: { [realmId: number]: RealmStakingData };
+	resultStakers: { [address: Address]: StakerDetails };
 	tokenStats: {
-		totalStaked: string; // Stringified bigint
-		totalDistributed: string; // Stringified bigint
-		numberOfStakers: number
+		totalStaked: bigint; // Keep as bigint internally
+		numberOfStakers: number;
 	};
-	realms: { [realmId: number]: RealmStakingData };
-	allStakers: { [address: Address]: StakerDetails };
-	leafData?: AggregatedStakeInfo[]; // Optional: include raw leaf data for debugging/proof generation
 }
 
-// --- Helper ---
+// --- Helpers ---
 const bufToHex = (b: Buffer): Hex => `0x${b.toString('hex')}`;
+const keccakBuffer = (input: Buffer | string): Buffer => {
+	const data = typeof input === 'string' ? Buffer.from(input) : input;
+	return Buffer.from(keccak256(data));
+};
 
-// --- Main Function ---
-export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 
-	const config = CONFIG
+// --- Refactored Functions ---
 
-	const rpcUrl = process.env.RPC_URL
-	const fromBlock = BigInt(config.tokenInfo.block)
-	const lerpTokenAddress = config.tokenInfo.address
-
-	const publicClient = createPublicClient({ transport: http(rpcUrl) });
+/**
+ * Fetches TokensStaked event logs from the LerpToken contract.
+ */
+async function fetchStakeLogs(publicClient: PublicClient): Promise<Log[]> {
+	const config = CONFIG;
+	const fromBlock = BigInt(config.tokenInfo.block);
+	const lerpTokenAddress = config.tokenInfo.address;
 	const stakeEventAbiItem = 'event TokensStaked(address indexed user, uint16 indexed realmId, uint256 amount, uint256 unlockTime)';
 
 	console.log(`Fetching TokensStaked logs from block ${fromBlock ?? 'genesis'}...`);
-	let logs: Log[] = [];
 	try {
-		logs = await publicClient.getLogs({
-			address: config.tokenInfo.address,
+		const logs = await publicClient.getLogs({
+			address: lerpTokenAddress,
 			event: parseAbiItem(stakeEventAbiItem),
-			fromBlock: fromBlock ?? BigInt(0),
+			fromBlock: fromBlock ?? 0n,
 			toBlock: 'latest',
 		});
 		console.log(`Fetched ${logs.length} TokensStaked logs.`);
+		return logs;
 	} catch (error) {
-		console.error("Error fetching logs:", error);
-		throw new Error(`Failed to fetch logs from RPC: ${rpcUrl}`);
+		console.error("Error fetching stake logs:", error);
+		throw new Error(`Failed to fetch logs from RPC: ${process.env.RPC_URL}`); // Rethrow or handle differently
 	}
+}
 
-	// Aggregate staking data per realm and per user
-	const aggregatedData: Map<number, Map<Address, { totalStaked: bigint, latestUnlockTime: bigint }>> = new Map();
+/**
+ * Aggregates raw log data into a nested map: realmId -> userAddress -> {totalStaked, latestUnlockTime}.
+ */
+function aggregateStakeLogs(logs: Log[]): AggregatedDataMap {
+	const aggregatedData: AggregatedDataMap = new Map();
+	const stakeEventAbiItem = 'event TokensStaked(address indexed user, uint16 indexed realmId, uint256 amount, uint256 unlockTime)';
+
 	for (const log of logs) {
 		try {
 			const decodedLog = decodeEventLog({
@@ -90,33 +84,41 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 				data: log.data,
 				topics: log.topics,
 			});
-			const { user, realmId, amount, unlockTime } = decodedLog.args as any; // Use any temporarily for simplicity
+			// TODO: Add check for args existence before destructuring
+			const { user, realmId, amount, unlockTime } = decodedLog.args as any;
 
 			if (!aggregatedData.has(realmId)) {
 				aggregatedData.set(realmId, new Map());
 			}
 			const realmMap = aggregatedData.get(realmId)!;
-			const userData = realmMap.get(user) ?? { totalStaked: BigInt(0), latestUnlockTime: BigInt(0) };
+			const userData = realmMap.get(user) ?? { totalStaked: 0n, latestUnlockTime: 0n };
+
 			userData.totalStaked += amount;
 			if (unlockTime > userData.latestUnlockTime) {
 				userData.latestUnlockTime = unlockTime;
 			}
 			realmMap.set(user, userData);
 		} catch (decodingError) {
-			console.warn("Error decoding log:", log, decodingError);
+			console.warn("Error decoding stake log:", log, decodingError);
 		}
 	}
+	return aggregatedData;
+}
 
-	// --- Prepare Data for Single Merkle Tree ---
+/**
+ * Processes the aggregated stake data into structured outputs for realms, stakers, and the flat list for Merkle tree.
+ */
+function processAggregatedData(aggregatedData: AggregatedDataMap): ProcessedStakeData {
 	const flatStakerList: AggregatedStakeInfo[] = [];
 	const resultRealms: { [realmId: number]: RealmStakingData } = {};
 	const resultStakers: { [address: Address]: StakerDetails } = {};
-	const resultStakersTotalStakeCount: {
-		[address: Address]: bigint
-	} = {}
+	const resultStakersTotalStakeCount: { [address: Address]: bigint } = {}; // Temp map for total stake per address
+
+	let totalStakedLFTCount = 0n;
+	let uniqueStakerAddresses = new Set<Address>();
 
 	// Initialize resultRealms with all configured realms
-	for (const realmConfig of config.realms) {
+	for (const realmConfig of CONFIG.realms) {
 		resultRealms[realmConfig.stakeRealmId] = {
 			totalStakedLFT: '0',
 			numberOfStakers: 0,
@@ -124,24 +126,17 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 		};
 	}
 
-	const tokenStats = {
-		totalStaked: '0',
-		totalDistributed: '0',
-		numberOfStakers: 0,
-	}
-
-	let token_totalStakedLFTCount = 0n
-	let token_numberOfStakers = 0
-
 	// Flatten aggregated data and populate result structures
 	for (const [realmId, realmMap] of aggregatedData.entries()) {
-		let totalStakedInRealm = BigInt(0);
+		let totalStakedInRealm = 0n;
 		const stakersOutput: StakerInfoOutput[] = [];
 
 		for (const [address, data] of realmMap.entries()) {
-			const stakeInfo: AggregatedStakeInfo = { // Use internal type for flat list
+			uniqueStakerAddresses.add(address); // Track unique stakers globally
+
+			const stakeInfo: AggregatedStakeInfo = {
 				address,
-				realmId, // Include realmId
+				realmId,
 				totalStaked: data.totalStaked,
 				latestUnlockTime: data.latestUnlockTime,
 			};
@@ -149,8 +144,8 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 
 			// Prepare output data
 			totalStakedInRealm += data.totalStaked;
-			token_totalStakedLFTCount += data.totalStaked
-			token_numberOfStakers++;
+			totalStakedLFTCount += data.totalStaked; // Accumulate global total stake
+
 			const stakerOutputInfo: StakerInfoOutput = {
 				address,
 				totalStaked: data.totalStaked.toString(),
@@ -161,91 +156,132 @@ export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 			// Update allStakers map
 			if (!resultStakers[address]) {
 				resultStakers[address] = { address, realms: {}, totalStaked: '0' };
-				resultStakersTotalStakeCount[address] = BigInt(0)
+				resultStakersTotalStakeCount[address] = 0n;
 			}
 			resultStakers[address].realms[realmId] = {
 				totalStaked: data.totalStaked.toString(),
 				latestUnlockTime: Number(data.latestUnlockTime),
 			};
-			resultStakersTotalStakeCount[address] += data.totalStaked
-
-			resultStakers[address].totalStaked = (resultStakersTotalStakeCount[address]).toString()
+			resultStakersTotalStakeCount[address] += data.totalStaked;
 		}
 
 		// Update realm data in results
-		if (resultRealms[realmId]) { // Check if realm exists (it should from initialization)
+		if (resultRealms[realmId]) {
 			resultRealms[realmId].totalStakedLFT = totalStakedInRealm.toString();
 			resultRealms[realmId].numberOfStakers = realmMap.size;
-			resultRealms[realmId].stakers = stakersOutput.sort((a, b) => a.address.localeCompare(b.address)); // Sort output list too
+			resultRealms[realmId].stakers = stakersOutput.sort((a, b) => a.address.localeCompare(b.address));
 		} else {
-			console.warn(`Realm ID ${realmId} found in logs but not in GLOBAL_CONFIG.ts`);
-			// Optionally handle this case, e.g., by adding it dynamically
+			console.warn(`Realm ID ${realmId} found in logs but not in CONFIG.ts`);
 		}
 	}
 
-	// --- Build Single Merkle Tree ---
-	let globalStakerMerkleRoot: Hex = '0x'; // Default empty root
+	// Finalize total staked per staker across all realms
+	for (const addressString in resultStakers) {
+		const address = addressString as Address; // Cast string key to Address type
+		resultStakers[address].totalStaked = resultStakersTotalStakeCount[address].toString();
+	}
+
+
+	return {
+		flatStakerList,
+		resultRealms,
+		resultStakers,
+		tokenStats: {
+			totalStaked: totalStakedLFTCount,
+			numberOfStakers: uniqueStakerAddresses.size,
+		}
+	};
+}
+
+/**
+ * Builds the global Merkle tree for stake withdrawals.
+ */
+function buildStakeMerkleTree(flatStakerList: AggregatedStakeInfo[]): Hex {
+	let globalStakerMerkleRoot: Hex = '0x';
 
 	if (flatStakerList.length > 0) {
 		// Sort the flat list deterministically (address first, then realmId)
-		flatStakerList.sort((a, b) => {
+		const sortedList = [...flatStakerList].sort((a, b) => {
 			const addrCompare = a.address.localeCompare(b.address);
 			if (addrCompare !== 0) return addrCompare;
 			return a.realmId - b.realmId;
 		});
 
-		const leaves = flatStakerList.map(staker => {
+		const leaves = sortedList.map(staker => {
 			const packedData = encodePacked(
-				['address', 'uint16', 'uint256', 'uint256'], // Include realmId (uint16)
+				['address', 'uint16', 'uint256', 'uint256'],
 				[staker.address, staker.realmId, staker.totalStaked, staker.latestUnlockTime]
 			);
-			return Buffer.from(keccak256(packedData));
+			return keccakBuffer(packedData);
 		});
 
-		const tree = new MerkleTree(leaves, (data: Buffer) => Buffer.from(keccak256(data)), { sortPairs: true });
+		const tree = new MerkleTree(leaves, keccakBuffer, { sortPairs: true });
 		globalStakerMerkleRoot = bufToHex(tree.getRoot());
 	}
+	return globalStakerMerkleRoot;
+}
 
-	console.log("Staking data aggregation complete.");
-
-	// --- Read Distributed Tokens from Contract ---
-	let distributedTokens = BigInt(0);
+/**
+ * Fetches token statistics (like total distributed) from the contract.
+ */
+async function fetchTokenStats(publicClient: PublicClient): Promise<{ totalDistributed: bigint }> {
+	const lerpTokenAddress = CONFIG.tokenInfo.address;
+	let distributedTokens = 0n;
 	try {
 		console.log(`Reading distributedTokens from ${lerpTokenAddress}...`);
 		distributedTokens = await publicClient.readContract({
 			address: lerpTokenAddress,
-			abi: LERP_TOKEN_ABI, // Use the imported ABI
+			abi: LERP_TOKEN_ABI,
 			functionName: 'distributedTokens',
-		}) as bigint; // Assert type
-		console.log(`Distributed Tokens: ${distributedTokens.toString()}`);
+		}) as bigint;
+		console.log(`Distributed Tokens: ${formatUnits(distributedTokens, 18)}`); // Log formatted value
 	} catch (error) {
 		console.error("Error reading distributedTokens from contract:", error);
-		// Decide how to handle - throw, or return 0? For now, log and continue with 0.
+		// Return 0 or throw? Returning 0 for now.
 	}
+	return { totalDistributed: distributedTokens };
+}
 
 
-	tokenStats.totalDistributed = distributedTokens.toString()
-	tokenStats.totalStaked = token_totalStakedLFTCount.toString()
-	tokenStats.numberOfStakers = token_numberOfStakers
+// --- Main Exported Function ---
+export async function computeStakesData(): Promise<ComputeStakesDataEntry> {
 
-	console.log("computation complete.");
+	const rpcUrl = process.env.RPC_URL;
+	if (!rpcUrl) {
+		throw new Error('RPC_URL not set in environment variables.');
+	}
+	const publicClient = createPublicClient({ transport: http(rpcUrl) });
 
+	// 1. Fetch Logs
+	const logs = await fetchStakeLogs(publicClient);
 
+	// 2. Aggregate Logs
+	const aggregatedData = aggregateStakeLogs(logs);
 
+	// 3. Process Aggregated Data
+	const processedData = processAggregatedData(aggregatedData);
+
+	// 4. Build Merkle Tree
+	const globalStakerMerkleRoot = buildStakeMerkleTree(processedData.flatStakerList);
+	console.log(`Global Staker Merkle Root: ${globalStakerMerkleRoot}`);
+
+	// 5. Fetch Additional Token Stats
+	const contractTokenStats = await fetchTokenStats(publicClient);
+
+	console.log("Stake computation complete.");
+
+	// 6. Assemble Final Result
 	const finalResult: ComputeStakesDataEntry = {
-		tokenStats: tokenStats,
 		globalStakerMerkleRoot,
-		realms: resultRealms,
-		allStakers: resultStakers,
+		tokenStats: {
+			totalStaked: processedData.tokenStats.totalStaked.toString(), // Convert bigint to string for final output
+			numberOfStakers: processedData.tokenStats.numberOfStakers,
+			totalDistributed: contractTokenStats.totalDistributed.toString(), // Convert bigint to string
+		},
+		realms: processedData.resultRealms,
+		allStakers: processedData.resultStakers,
+		leafData: processedData.flatStakerList // Include raw leaf data
 	};
-
-	// // Optionally include raw leaf data for debugging/proof generation client-side
-	// if (options?.includeLeafData) {
-	// 	finalResult.leafData = flatStakerList;
-	// }
-
-	finalResult.leafData = flatStakerList;
 
 	return finalResult;
 }
-
