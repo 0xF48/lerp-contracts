@@ -47,30 +47,54 @@ export type StakesPushHashResult = ComputeResult & {
 	};
 }
 
+// Structure for computed claim data per realm
+export interface RealmClaimData {
+	realmId: number;
+	totalRevenueProcessed: string; // Total revenue from events in this period
+	totalClaimableAmount: string; // Sum of all individual claims
+	claimMerkleRoot: Hex;
+	numberOfClaimants: number;
+	claims: { address: Address; amount: string }[]; // Individual claim amounts (stringified bigint)
+	leafData?: { address: Address; amount: bigint }[]; // Raw leaf data for proof generation
+}
+
+// Result structure for the overall claims computation job
 export type ClaimsComputeResult = ComputeResult & {
 	data: {
-
+		// Map realmId to its computed claim data
+		realms: { [realmId: number]: RealmClaimData };
+		// Optional: Add overall stats if needed
 	}
 }
 
+// Result structure for pushing a single realm's claim hash
 export type ClaimsPushHashResult = ComputeResult & {
 	data: {
-
+		realmId: number;
+		merkleRoot: Hex;
+		success: boolean;
+		transactionHash?: Hex;
+		blockNumber?: bigint;
+		gasUsed?: string; // Store as string
+		effectiveGasPrice?: string; // Store as string
+		status?: 'success' | 'reverted' | 'skipped_duplicate' | 'skipped_no_claims'; // Include status
+		error?: string;
 	}
 }
 
 export type AirdropResult = ComputeResult & {
 	data: {
-
+		// Define structure for airdrop results if needed
 	}
 }
 
+
 export const enum COMPUTE_COLLECTIONS {
-	ClaimsPushHashResult = "ClaimsPushHashResult",
-	StakesPushHashResult = "StakesPushHashResult",
-	ClaimsComputeResult = "ClaimsComputeResult",
-	StakesComputeResult = "StakesComputeResult",
-	AirdropResult = "AirdropResult"
+	StakesPushHashResult = "lerp_stakes_push_hash_results", // Use more descriptive names
+	ClaimsComputeResult = "lerp_claims_compute_results",
+	StakesComputeResult = "lerp_stakes_compute_results",
+	ClaimsPushHashResult = "lerp_claims_push_hash_results", // Added missing entry
+	AirdropResult = "lerp_airdrop_results"
 }
 
 
@@ -96,6 +120,24 @@ export const CONFIG: PublicConfig = {
 
 	checksum: '',
 	realms: [
+		{ // Start of first realm object in array
+			stakeRealmId: 1,
+			id: "podrun",
+			name: "Pod Run",
+			currentVersion: "0.1-DEV",
+			bannerUrl: "/assets/realms/podrun/podrun.png",
+			media: {
+				static: {
+					src: "/assets/realms/podrun/reel-1.jpg"
+				}
+			},
+			contract: {
+				"address": "0x67EA526eF4b2713d248b55bafe7352b66Fd637bf",
+				"chain": 31337,
+				"blockNumber": "0",
+				"assets": []
+			}
+		}, // End of first realm object <-- Added comma
 		{
 			stakeRealmId: 1,
 			id: "podrun",
@@ -128,6 +170,37 @@ export const CONFIG: PublicConfig = {
 export const CONFIG_CHECKSUM = computeChecksum(CONFIG)
 
 CONFIG.checksum = CONFIG_CHECKSUM
+
+
+// ABI fragment for LerpRealm (add more as needed)
+export const LERP_REALM_ABI = [
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "payer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "revenueAmount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "totalValue",
+				"type": "uint256"
+			}
+		],
+		"name": "RevenueGenerated",
+		"type": "event"
+	}
+	// Add other LerpRealm functions/events here if needed by scripts
+] as const;
 
 
 // ABI of the LerpToken contract

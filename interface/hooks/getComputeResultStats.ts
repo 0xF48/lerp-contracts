@@ -14,7 +14,7 @@ export async function getComputeResultStats(): Promise<StatEntry[]> {
 		{
 			name: 'Stakes Hash Pushed',
 			description: 'The last time the merkel hash for the lerp founder contract on the mainnet was uploaded',
-			value_str: StakesPushHashResult ? new Date(StakesPushHashResult.timestamp).toString() : 'never'
+			value_str: StakesPushHashResult ? formatDistanceToNow(new Date(StakesPushHashResult.timestamp), { addSuffix: true }) : 'never'
 		},
 		{
 			name: 'Claims Computed',
